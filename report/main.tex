@@ -1,0 +1,62 @@
+\documentclass[11pt,a4paper,twoside]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=vancouver,
+  sorting=none,
+  maxcitenames=2,
+  maxbibnames=6,
+  minbibnames=6,
+  doi=true
+]{biblatex}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+  ]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\addbibresource{references.bib}
+\newcommand{\projecttitle}{When More Evidence Hurts: Evaluating Executable Evidence for Performance Prediction in AI Programming Tutors}
+\hypersetup{
+  pdftitle={\projecttitle},
+  pdfauthor={Anas Khan},
+  pdfsubject={MSc Computing dissertation, Imperial College London},
+  pdflang={en-GB}
+}
+
+\begin{document}
+
+\pagenumbering{roman}
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+\include{chapters/01-introduction}
+\include{chapters/02-related-work}
+\include{chapters/03-measurement-design}
+\include{chapters/04-system-design}
+\include{chapters/05-evidence-tracking-and-acquisition}
+\include{chapters/06-evaluation}
+\include{chapters/07-discussion}
+\include{chapters/08-conclusion}
+
+\printbibliography[heading=bibintoc,title={References}]
+
+\appendix
+
+\end{document}
