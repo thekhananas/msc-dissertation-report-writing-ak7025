@@ -41,6 +41,9 @@
 
 \begin{document}
 
+\hypersetup{pageanchor=false}
+\input{frontmatter/title}
+\hypersetup{pageanchor=true}
 \pagenumbering{roman}
 \tableofcontents
 
@@ -56,6 +59,8 @@
 \include{chapters/08-conclusion}
 
 \printbibliography[heading=bibintoc,title={References}]
+\clearpage
+\input{frontmatter/declaration}
 
 \appendix
 
