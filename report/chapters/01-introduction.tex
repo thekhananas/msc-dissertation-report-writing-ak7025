@@ -1,5 +1,35 @@
 \chapter{Introduction}
 \label{ch:introduction}
 
-% TODO: Introduction and problem formulation.
-% Outline why evidence matters in AI programming tutors.
+% Draft v0.1 - initial motivation
+In this dissertation, an AI programing tutor means an interactive system that uses artificial intelligence to help a learner
+work through programming problems through questions, explanations or hints. This working definition draws on research on
+intelligent tutoring and conversational tutoring systems \parencite{vanlehn2011relative,nye2014autotutor}. The term describes
+the intended educational role. Evidence of effective teaching depends on how the system is evaluated.
+
+Current products illustrate this setting. Khan Academy describes Khanmigo as a tutor that guides learners through problems,
+while Codecademy's AI Learning Assistant provides code explanations and hints within programming exercises
+\parencite{khanacademyKhanmigo,codecademyLearningAssistant}. General language models can also support tutoring through a
+configured interface, as in the GPT-based systems studied by Bastani and colleagues \parencite{bastani2025guardrails}.
+Anthropic's Claude Learning mode similarly uses questions to guide reasoning \parencite{anthropic2025education}.
+These examples establish the application context. The product descriptions do not establish independent learning gains or
+show that these products use the evidence-selection method investigated here.
+
+An adaptive programming tutor must decide whether to advance, ask another question, offer a hint, or request a short coding
+check. A fluent explanation can sound convincing while failing to show whether the person can solve a related task alone.
+Code offers another source of evidence, yet the task may be poorly chosen, the tests may miss part of the requirement, or the
+result may concern a different skill. An extra check can therefore improve a prediction or make it less reliable.
+
+This dissertation studies that decision in the setting of an AI programming tutor. It asks how a system should use extra coding
+evidence when predicting performance on a later task. The working tutoring interface illustrates a Socratic interaction.
+The experiments assess prediction and evidence use. Teaching effectiveness remains a question for a future student study.
+
+% NOTE: Bastani paper is essential to cite here for independent performance drop
+\section{Why Study the Evidence Decision?}
+
+Success with assistance can differ from independent performance. In a high-school mathematics study, Bastani and colleagues
+compared a general-purpose GPT-based interface, a tutor with teacher-informed guardrails, and a control without generative AI.
+Both AI conditions improved assisted practice performance. On the subsequent unassisted exam, the general-purpose condition
+performed worse than the control. The guarded tutor did not show a statistically detectable advantage over the control
+\parencite{bastani2025guardrails}. The result concerns those tools and that educational setting, rather than showing that all
+AI assistance harms learning.
