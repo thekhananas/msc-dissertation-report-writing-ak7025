@@ -1,4 +1,88 @@
+% Literature review rough notes and synthesis
 \chapter{Background and Related Work}
 \label{ch:related-work}
 
-% Working notes on prior tutoring literature, BKT, and active learning.
+The central distinction in this review is between improving a tutor's response, estimating performance, and deciding which
+additional evidence to collect. These tasks can share software and mathematical tools while requiring different evaluations.
+The literature is compared through those decisions and outcomes, rather than through the number of agents or models used.
+
+AI in education includes learner modelling, automated assessment and tools that support teaching. Reviews of the field warn
+against judging an educational system solely by what its software can do. The educational purpose, the people involved and the
+outcome being measured also matter \parencite{roll2016evolution,zawackirichter2019ai}. This report therefore keeps its
+engineering demonstration separate from its prediction experiments.
+
+The wider feedback literature reaches a related conclusion: the value of feedback depends on its timing, content and the
+learner's opportunity to use it \parencite{hattie2007power,shute2008formative}. That does not make this a feedback-effectiveness
+study. It explains why a tutor needs a defensible basis for deciding whether to seek more evidence before it acts.
+
+\section{Why Evidence Decisions Matter Before Tutor Action}
+
+An AI programming tutor must decide what to do after a learner's action. It may offer guidance, ask for more evidence, or move
+on. The present dissertation studies the evidence decision that comes before that tutor action. It does not study how feedback
+is worded or whether a particular explanation improves learning.
+
+The educational case for intelligent tutoring systems is substantial, but it is not uniform. Meta-analyses report positive
+average effects compared with conventional instruction, while also finding that outcomes depend on the comparison condition,
+the assessment used and the match between what the tutor teaches and what the test measures
+\parencite{ma2014intelligent,kulik2016effectiveness,vanlehn2011relative}. This makes the evaluation target important. A
+system that produces plausible assistance during practice has not thereby shown that learners can solve a related problem
+independently.
+
+Programming education has a long history of automated assessment. Unit tests, reference answers and program analysis make
+observations available quickly. Surveys show that the assessment target must be stated carefully, because dynamic tests,
+static checks and feedback tools examine different properties of a program \parencite{alamutka2005assessment,ihantola2010assessment}.
+They do not, by themselves, establish which programming idea a learner understands. Prior work on automated feedback also
+shows why the assessment boundary matters: immediate task performance does not necessarily show whether a learner can solve a
+later task independently \parencite{keuning2018systematic,cavalcanti2021automatic}. This dissertation uses that distinction
+to define its setting. It does not evaluate feedback wording or pedagogical quality. A recent review of AI in programming
+education likewise shows a varied set of applications and evaluation choices, rather than one settled measure of educational
+value \parencite{manorat2025artificial}.
+
+The need for support should also be stated carefully. Reviews describe fragile knowledge, incomplete mental models and recurring
+misconceptions among novice programmers \parencite{robins2003programming,qian2018misconceptions,luxtonreilly2018introductory}.
+Claims that introductory programming has an unusually high failure rate are less settled. An early international survey had
+too few participating institutions for firm conclusions \parencite{bennedsen2007failure}. A later review of 161 courses found
+an average pass rate of 67.7\%, with limited variation by language and over time \parencite{watson2014failure}. These findings
+support studying programming evidence without treating every error as proof that programming education is failing.
+
+LLMs make the surrounding tutor more fluent, but they also make weak evidence harder to notice. Reviews of LLM use in
+education report limited replicability, low technology readiness and unresolved concerns about transparency, privacy and
+beneficence \parencite{yan2024practical}. Experimental reviews also warn that improvements in assisted performance do not by
+themselves establish durable learning, and call for stronger outcome measures and adequate power \parencite{deng2024chatgpt}.
+
+This dissertation therefore focuses on a decision that sits before any tutor explanation: whether an additional executable check
+should be requested and how much trust it should receive. The question is narrower than whether an LLM tutor improves learning.
+It asks whether the system can make a more reliable prediction when available evidence may be incomplete, irrelevant or wrong.
+
+\section{Learner Modelling and Programming Evidence}
+
+Bayesian knowledge tracing separates observed performance from an inferred knowledge state. In the original programming-tutor
+model, each coding rule is either learned or unlearned. A learned rule can produce an incorrect answer through a slip. An
+unlearned rule can produce a correct answer through guessing. The model also includes initial knowledge and a probability of
+learning during practice. Its original formulation assumes no forgetting
+\parencite[Section 3, pp.~260--261, Figure 4]{corbett1994knowledge}.
+
+Observation and learning are separate steps. If $q$ is the probability that a rule was already learned after accounting for
+the observed answer, and $\tau$ is the learning-transition probability, the next estimate is
+\begin{equation}
+ p_{\mathrm{next}}=q+(1-q)\tau.
+\end{equation}
+This restates Corbett and Anderson's equation~1: the rule was already learned, or it was unlearned and is acquired during the
+opportunity to practise \parencite[p.~261]{corbett1994knowledge}. Updating an estimate from evidence and modelling a change in
+knowledge are therefore different operations.
+
+That distinction constrains this dissertation. The external-model benchmark's tracker applies fixed score changes. The
+bounded-update study evaluates belief updates against authored hidden states, while the probe-selection study starts with supplied probabilities and performs
+one batch selection without a learning transition. Neither a rising demo score nor a successful simulated update establishes
+human learning. The shared contribution of knowledge tracing is the explicit observation/state distinction, rather than evidence
+that these simpler project components measure mastery.
+
+Deep Knowledge Tracing uses recurrent neural networks to learn a representation of interaction history and predict future
+performance. Its inputs encode the exercise and whether the answer was correct. The learned state can capture dependencies
+across interactions without an explicit binary mastery variable for each skill
+\parencite[Section 3]{piech2015dkt}. Fitting this representation requires learner records, and its state is less directly inspectable.
+The present studies use transparent, authored probabilities for a different reason: they test how a prediction changes after
+one additional coding check. They do not fit a learner model from the 23 authored cases.
+
+
+% Needs expansion: compare BKT parameters with LLM calibration
