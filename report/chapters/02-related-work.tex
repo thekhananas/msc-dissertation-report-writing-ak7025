@@ -1,4 +1,3 @@
-% Literature review rough notes and synthesis
 \chapter{Background and Related Work}
 \label{ch:related-work}
 
@@ -85,4 +84,50 @@ The present studies use transparent, authored probabilities for a different reas
 one additional coding check. They do not fit a learner model from the 23 authored cases.
 
 
-% Needs expansion: compare BKT parameters with LLM calibration
+Learner models also differ in what they allow to vary. Reviews cover probabilistic, cognitive and item-based approaches
+\parencite{desmarais2012learner}. Individualised Bayesian knowledge tracing has shown that learner-specific rates can improve
+prediction for unseen students. In that evaluation, the model could not use fitted personal parameters for the test learners.
+The authors attribute the gain to better shared skill parameters after accounting for learner variation during fitting
+\parencite[Section 4]{yudelson2013individualized}. The project does not estimate such rates. Its historical
+study uses simple predictors with learner-separated folds, while its simulators hold their learner assumptions fixed. This
+limits any claim that the resulting probabilities describe an individual learner's knowledge.
+
+TIKTOC makes the programming observation more detailed: it jointly predicts student code and whether that code passes
+individual tests. Its training objective combines code-generation and test-outcome losses
+\parencite[Section 4.3, equation 4]{duan2025tiktoc}. This is directly relevant to the original proposal, since using executable
+test information to model programming performance is already established work. The present dissertation cannot claim that
+idea as its novelty.
+
+The distinction lies in the decision being studied. TIKTOC learns predictions from interaction histories and test-level
+information. The probe-selection study allocates a fixed number of additional observations under uncertain channel reliability. TIKTOC's reported
+model comparison does not evaluate that allocation problem, and this project does not reproduce its learned predictor.
+Consequently, the results cannot establish superiority over TIKTOC.
+
+TIKTOC augments Java CodeWorkout data with 305 tests across 17 problems. The reported
+subset contains 3,714 submissions from 246 students \parencite[Section 3.2, Table 2]{duan2025tiktoc}. This dissertation's study of
+Python CSEDM records selects uncertain first-attempt predictions for hypothetical review. It neither reconstructs
+TIKTOC's test-level targets nor evaluates optional executable checks. Its larger observational sample therefore provides a
+separate finding, rather than external validation of the probe-selection rule.
+
+TRAVER combines knowledge tracing with a trained turn-level verifier that ranks candidate tutor utterances
+\parencite[Sections 3.1--3.2]{wang2025traver}. Its DICT protocol evaluates coding tutoring through simulated students and code
+generation tests. The selected object is therefore a tutor response, whereas this dissertation's probe-selection study selects cases for additional evidence.
+The outcomes also differ. DICT assesses task completion in a tutoring process. This dissertation evaluates prediction under
+fixed evidence conditions.
+
+This distinction prevents a misleading comparison. The project does not outperform TRAVER, and its frozen results cannot be
+placed on the same performance scale. TRAVER establishes that combining tracing and verification is already part of the
+coding-tutor literature. The narrower issue investigated here is how evidence handling and selection behave when the assumed
+evidence channel is wrong. That is a difference in the experiment, not proof of a globally new architecture.
+
+\subsection{What an Uncertain Observation Means}
+
+A confidence score needs an interpretation before it can support a probability update. Chan and Darwiche distinguish two
+ways to specify uncertain evidence: Jeffrey's rule takes prescribed revised probabilities for a set of events, whereas virtual evidence
+specifies evidence strength through likelihood ratios. They explain how to translate between these descriptions when the
+prior is known \parencite[pp. 69--74, 77--78]{chan2003uncertain}. A statement about confidence does not, by itself, say which
+description is intended.
+
+Consider a success probability of $0.2$, giving prior odds of $1:4$. Evidence with a likelihood ratio of $4$ changes those
+
+% Note: supervisor suggested highlighting slip and guess parameters in programming context
