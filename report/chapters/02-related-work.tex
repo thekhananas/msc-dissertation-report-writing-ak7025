@@ -129,3 +129,64 @@ prior is known \parencite[pp. 69--74, 77--78]{chan2003uncertain}. A statement ab
 description is intended.
 
 Consider a success probability of $0.2$, giving prior odds of $1:4$. Evidence with a likelihood ratio of $4$ changes those
+
+odds to $1:1$, so the revised probability is $0.5$. Requiring a revised probability of $0.8$ instead gives odds of $4:1$.
+Reaching that value from the same prior would require a likelihood ratio of $16$. This illustrative calculation shows why
+evidence strength and revised belief cannot be substituted for each other.
+
+The distinction matters for the bounded-update study. Its channel-aware trackers use authored probabilities of an observation given each simulated
+state. They retain the input confidence field but do not use it in the update. The legacy comparison applies a separate
+fractional likelihood transformation to confidence. That transformation should not be presented as an implementation of
+Jeffrey's rule or as evidence that confidence is calibrated. The update equations in \cref{ch:method} specify what the
+channel-aware rules actually do. Clipping then modifies their contribution, so the resulting belief need not be the posterior
+under the original observation model. These are modelling choices whose consequences require evaluation.
+
+\section{Active Evidence Acquisition}
+
+Active-learning research provides the broad idea of asking for information where it may be most useful. Early work used model
+uncertainty to select training examples, and later surveys distinguish that decision from prediction itself
+\parencite{lewis1994sequential,cohn1996active,settles2009active}. Those methods commonly acquire labels to improve a model
+for future use. The current study instead allocates extra checks to cases that are already being predicted. This difference
+matters because an attractive training-data acquisition rule need not improve a saved case-level prediction.
+
+Dynamic LENS maintains a distribution over learner-state estimates, combining learned forecasts with encodings of observed
+responses \parencite[Section 2]{christie2024dynamiclens}. Its evaluation examines prediction and how uncertainty changes as
+history is included. The discussion proposes selecting questions by expected information gain, while noting that efficient
+approximation needs further investigation \parencite[Sections 3--4]{christie2024dynamiclens}. It supports the motivation for
+uncertainty-aware assessment. It is not a reported fixed-budget acquisition trial against which this dissertation's results
+can be directly compared.
+
+The project's uncertainty-only baseline uses a simpler quantity: closeness of a single predicted success probability to
+one half. This does not distinguish uncertainty about an estimated probability from variation that remains even when that
+probability is known. For example, a known fair coin has outcome probability one half, but further flips need not reveal
+anything about its already-known bias. A poorly estimated bias may also have mean one half, with a different reason for
+collecting data. The example illustrates why equal prediction scores can conceal different opportunities for improvement.
+
+Calibration asks a separate question: whether predicted probabilities match observed frequencies. Modern classifiers can be
+accurate while poorly calibrated \parencite{guo2017calibration}, and uncertainty methods can change their behaviour when the
+data distribution shifts \parencite{ovadia2019uncertainty}. These findings motivate the held-out fault settings in this
+dissertation. They do not show that the authored settings match a classroom, or that the project's probabilities are calibrated
+outside their declared simulator.
+
+The historical learner-record study tests whether a simple uncertainty ranking identifies errors in saved predictions. A positive result does not establish
+that those errors are reducible through review. The probe-selection study additionally models the evidence channel, but its score must still account
+for how an observation affects the executed decision. Neither study implements Dynamic LENS or separates these sources of
+uncertainty through a learned distribution over learner states.
+
+Prediction-oriented active learning makes a related distinction between learning model parameters and improving predictions
+on inputs of interest. \textcite[Sections 2.1 and 4]{bickfordsmith2023prediction} introduce expected predictive information gain
+(EPIG). It measures how informative an acquired label is about a target label, averaged over a specified target input
+distribution. Their active-learning procedure acquires labels for training and updates the predictive model.
+
+The target distribution matters: information about a remote or irrelevant part of the input space may contribute little to
+the predictions that the system needs to make. EPIG expresses relevance through expected predictive information, rather than
+through a label such as ``related task''. Its connection to expected generalisation error uses cross-entropy under the stated
+model \parencite[Section 4, equation 5]{bickfordsmith2023prediction}. It is not a guarantee that every acquired label reduces
+realised classification error.
+
+This provides a useful comparison for the dissertation's design. The probe-selection study neither implements EPIG nor retrains a predictive model
+after acquiring labels. Its checks update separate case beliefs under fixed calibration, and its endpoint is binary
+classification error. The relevant lesson is to specify which future prediction an observation should help, then evaluate
+the actual decision rule. A shared prediction-oriented motivation does not make the clipped-belief score equivalent to EPIG,
+or allow its negative result to stand as a comparison against that method.
+
