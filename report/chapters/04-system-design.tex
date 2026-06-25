@@ -58,3 +58,54 @@ evaluator receives the later task outcome and uses it to score each prediction.
 
 The system first checks that the input recordings contain no later task responses. It verifies the input hashes, executes
 the evidence programs, saves the predictions and records missing cases. It then creates a global decision seal, a record
+
+linking the complete set of saved predictions to their input and run identities. Before requesting the later responses, the
+next phase requires a matching seal and checks the number of complete cases. This order lets a reader inspect which
+predictions were saved before the outcomes became available. A repository owner can still open local criterion files manually
+outside this workflow.
+
+In the simulator studies, each selection rule receives only its permitted observations and estimated evidence reliability.
+The simulator keeps the true generating settings and outcomes for evaluation. One reference rule receives the true evidence
+reliability so that the comparison can show what this extra information changes. Chapter~\ref{ch:method} defines that reference
+and its limits. Keeping those settings hidden from the ordinary rules tests their use of available information. The simulated
+states still depend on the authored assumptions.
+
+\section{Records, Replay and Failure Handling}
+
+For one benchmark case, the saved evidence response leads to an execution summary, which supplies the condition updates.
+The condition record includes input identities and the resulting prediction. The global seal binds the completed decision
+set. Subsequent criterion and analysis records refer back to that seal. A correction report links the original and repaired
+execution outcomes rather than replacing the original report. This chain lets a reader trace a plotted result back to the
+recorded response and the version of the scoring procedure that produced it.
+
+The shared JSON writer accepts an existing output only when its bytes match, and raises an artifact-conflict error when they
+differ. New content is written to a temporary file, flushed and published by replacement, followed by a directory flush.
+This reduces partial-file risk and supports exact retries in the intended single-writer workflow. The existence check and
+replacement are separate operations. Concurrent writers to the same destination are not protected by an exclusive reservation.
+Runs therefore need separate output roots. No claim of a concurrent write-once storage service follows from these helpers.
+
+Provider failure, invalid generated code, sandbox failure and completed tests with failing assertions are different outcomes.
+Only the last supplies an observed test failure. The saved failures remain part of the run accounting rather than silently
+becoming evidence of poor model performance. Recorded-response replay removes the need to regenerate model answers, although
+replaying code through an external sandbox is distinct from recomputing analysis over saved execution summaries.
+
+\section{Sandbox Configuration and Verification Scope}
+
+The Modal adapter requests a Debian-based Python 3.12 environment, network blocking, and no mounted project directory or
+injected secrets. Its default CPU request and limit are 0.25 and 0.5 cores. The memory request and limit are 256 and 512 MiB.
+The authored-test request specifies a 15-second timeout. These are configured limits, not measured resource consumption.
+The historical accounting lacks sandbox duration, CPU and memory observations, so the dissertation does not infer actual
+usage from those settings.
+
+The command runs Python with \texttt{-I}, passing the submission and test description as encoded arguments. The harness
+compiles and executes the submitted function, then emits a structured test result. The interpreter flag reduces dependence
+on the local Python environment. The external sandbox provides the
+host-isolation boundary because the interpreter flag cannot contain malicious Python. Provider failure does not trigger
+local execution of untrusted submissions.
+
+Normal Python output is redirected through a 4,096-character limiter during submission execution. The adapter separately
+retains at most the requested number of characters from each output stream. However, it reads each stream before truncating
+it, so this is not a streaming memory bound. The redirection also does not establish control over every possible low-level
+write by hostile code. The timeout and remote memory limit remain distinct safeguards, rather than proof that output attacks
+are fully handled.
+
