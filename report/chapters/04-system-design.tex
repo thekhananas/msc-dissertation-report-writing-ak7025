@@ -59,7 +59,7 @@ evaluator receives the later task outcome and uses it to score each prediction.
 The system first checks that the input recordings contain no later task responses. It verifies the input hashes, executes
 the evidence programs, saves the predictions and records missing cases. It then creates a global decision seal, a record
 
-linking the complete set of saved predictions to their input and run identities. Before requesting the later responses, the
+linking the full set of saved predictions to their input and run identities. Before requesting the later responses, the
 next phase requires a matching seal and checks the number of complete cases. This order lets a reader inspect which
 predictions were saved before the outcomes became available. A repository owner can still open local criterion files manually
 outside this workflow.
