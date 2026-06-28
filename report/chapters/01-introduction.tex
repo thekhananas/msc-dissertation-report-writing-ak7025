@@ -31,3 +31,50 @@ Both AI conditions improved assisted practice performance. On the subsequent una
 performed worse than the control. The guarded tutor did not show a statistically detectable advantage over the control
 \parencite{bastani2025guardrails}. The result concerns those tools and that educational setting, rather than showing that all
 AI assistance harms learning.
+
+\section{Research Questions}
+
+The central question is:
+
+\begin{quote}
+When a programming tutor can request an extra coding check, when does that check give useful evidence about a later task, and
+when can it make the prediction less reliable?
+\end{quote}
+
+In this report, an executable check is a separate short programming task whose code is run against authored tests. The
+acquisition experiment studies a narrower case: it gives exactly 20 of 40 simulated cases an extra check, then compares rules
+for choosing those 20 cases. It does not decide whether to spend the allocation, adapt after each selection, or measure money
+or classroom time.
+
+The four study questions are stated below using the corrected method descriptions. The frozen plans retain their original
+wording and policy identifiers. The original RQ3 named ordinary value-of-information selection as a comparator. The implemented
+comparator instead scores changes in probability after limiting the effect of evidence. This score can favour a check even
+when its result would leave the predicted outcome unchanged. That part of the original question remains unanswered. RQ3 below describes
+the comparison actually performed. This wording was clarified after the experiment had been frozen.
+No predictions, outcomes, or implemented comparators were changed by the clarification.
+
+The study sequence also matters. The RQ1--RQ3 narrative was recorded on 4 September 2026, after the earlier benchmark and tracker
+work. Their original protocols retain their own dates. The student records come from the 2019 Computer Science Educational
+Data Mining (CSEDM) data challenge. The project's analysis specification for these records is dated 10 September 2026.
+Its configuration matches the recorded prediction run, but the available evidence has yet to establish when results were first
+inspected. The study is therefore reported as exploratory. The acquisition interpretation was corrected on 11 September.
+These dates describe how the investigation developed.
+
+\begin{description}
+  \item[RQ1: Extra coding evidence.] When every case receives an extra coding check, does that check improve the system's
+  prediction of whether the evaluation model will solve a different Python task? Predictions are saved before the later task
+  is requested.
+  \item[RQ2: Limiting a bad check.] In the declared simulator, does limiting the effect of one check improve prediction quality
+  when checks are unreliable, while keeping any loss small when checks are reliable?
+  \item[RQ3: Choosing checks.] When only half of the cases can receive an extra check, does the proposed rule choose better cases
+  than random choice, choosing the most uncertain cases, or a simpler rule that uses estimated reliability?
+  \item[RQ4: Finding likely errors.] In historical CSEDM records, does selecting the most uncertain predictions identify more
+  errors in predictions of first-attempt success than selecting the same number of predictions at random?
+\end{description}
+
+RQ4 asks whether uncertainty helps locate prediction errors in historical learner records. Those records contain the outcomes
+needed to assess error selection. Assessing the probe policy would also require outcomes from optional checks, which these
+records do not contain. The direct answers appear in \cref{ch:evaluation}. Their limits are examined in \cref{ch:discussion}.
+
+% Keep the contribution table after the research questions and its introduction.
+\suppressfloats[t]
