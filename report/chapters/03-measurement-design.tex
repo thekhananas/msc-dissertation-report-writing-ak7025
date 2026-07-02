@@ -1,4 +1,81 @@
+% Case and control design draft
 \chapter{Measurement Design}
-\label{ch:measurement-design}
+\label{ch:measurement}
 
-% Benchmark structure and test cases.
+The first study asked whether an extra coding check improved a prediction of success on a separate task. The language model
+\texttt{gpt-oss-120b} supplied answers and code for 24 authored Python cases covering four concepts and eight misconceptions.
+Each case began with an answer that reviewers could read. A related coding task supplied additional evidence. The system
+also formed controls by substituting unrelated evidence or reversing test results. A separate coding task, called the criterion
+task, supplied the outcome used to assess the predictions. The workflow saved predictions before requesting this final code
+response. Its ordering checks are described in Chapter~\ref{ch:system}.
+
+\section{Case Construction}
+
+The corpus covers assignment evaluation, object aliasing, function arguments and conditional control. Each concept contains
+two authored misconception groups, with three cases per group. Examples include treating assignment as copying a mutable
+object, assuming that a function copies its argument, and treating a conditional as two independent checks. These groups
+define the intended coverage. Their frequency in the corpus does not estimate prevalence among students.
+
+Each case links a public prompt to an executable evidence task and a separate criterion task. The manifest records their
+paths and hashes, an initial tracker state, control assignments, and evaluator-only review and structural-difference records.
+The structural records explain how the evidence and criterion tasks differ. For example, one evidence task asks for the sorted
+result after adding a permission, while its criterion asks for a removal operation through a function over a different
+collection. Differences in operation, signature and values reduce literal answer reuse. They do not by themselves validate
+educational transfer or exclude shared shortcuts.
+
+The manifest also retains authored evidence-pattern labels used during benchmark construction. These are design metadata,
+not observed performance labels for the external model. Its public response is rated independently, and its criterion outcome
+comes from executing its submitted code. Neither outcome is inferred from the intended case pattern. Calling the corpus
+held-out refers to its experimental role. It does not establish that these concepts or similar questions were absent from
+the model's training data.
+
+\section{Control Construction}
+
+The unrelated control uses a preassigned source case whose target-concept label differs from the target case. It copies that
+source's recorded evidence pass and fail counts unchanged. The implementation rejects self-assignment and same-concept
+assignment, and records the source summary and assignment hashes. The mapping is fixed rather than selected after inspecting
+which source gives a favourable comparison. Different concept labels define unrelated evidence for this experiment.
+The underlying programming skills may still overlap.
+
+The corrupted control swaps the target evidence's pass and fail counts. All-pass evidence becomes all-fail evidence, and
+vice versa. A mixed result remains in the conflicting category after the swap, so corruption does not necessarily change
+the tracker's update for every possible input. The recorded seed is provenance metadata. This transformation is deterministic
+and does not draw random flips. It changes the summary supplied to the tracker, not the submitted program or the sandbox.
+
+Both controls reuse existing evidence summaries. They require no extra model generation and are not separate tutor
+conversations. This design isolates the response of the fixed tracker to substituted evidence. It cannot show how a live
+tutor or student would react to receiving an unrelated question or misleading feedback.
+
+\section{From Observations to Predictions}
+
+The evaluation model answered the public, evidence and criterion prompts in separate contexts. Here, isolated means that a
+response did not receive the conversation history from another channel. It does not mean that the model had never encountered
+similar tasks during training. The later criterion was withheld from the tracker and prediction process. Its completion tests
+model performance rather than learning caused by the earlier prompt.
+
+The v1 tracker is an authored additive rule, separate from the Bayesian tracker introduced later. It starts at a score of 0.5.
+A correct observation adds 0.2. An incorrect answer or misconception subtracts 0.2. A conflicting observation subtracts 0.1,
+while an uncertain or empty observation leaves the score unchanged. Each update is restricted to the interval $[0,1]$:
+\begin{equation}
+  s^{+}=\min(1,\max(0,s+\Delta_c)),
+\end{equation}
+where $\Delta_c$ is the fixed change for the observation category. The stored field is named
+\texttt{mastery\_probability}, but the score is not a calibrated probability or a measurement of human mastery. Recorded
+confidence values do not affect this update. The binary prediction is success when the final score is at least 0.6.
+
+Independent public-answer ratings provide the first observation. Each condition then starts from an identical copy of the
+post-answer state. Dialogue alone receives no further update. The other conditions receive the category derived from their
+respective test counts: all checks passing means correct, all failing means incorrect, and a mixture means conflicting.
+An empty set of test results is an invalid input. The conditions are evaluated separately. Updates from
+one condition cannot carry into another.
+
+This rule deliberately compresses the evidence. It does not inspect program meaning or weight a result by its relevance to
+the target concept. Two checks with the same outcome category therefore produce the same update, even when one is unrelated.
+The unrelated control tests this limitation of the chosen prediction rule. Equality between those conditions cannot establish
+that relevance never matters for a richer tracker.
+
+\section{Public-Answer Review}
+
+Two reviewers assessed the 24 public responses: an MSc Computing student and a senior software engineer. Each received a CSV
+containing the case identifier, public prompt, visible response and response hash, together with the shared category guide.
+The packet excluded executable probes, test results, criterion material, authored evidence patterns and condition predictions.
