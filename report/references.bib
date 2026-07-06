@@ -188,3 +188,239 @@
 % The theorem statement was checked; no independent verification of the full
 % appendix proof is claimed. Its guarantee is not the project's one-step
 % log-odds bound, and does not transfer to M7A or prove repeated-update safety.
+
+@inproceedings{duranmartin2024outlier,
+  author    = {Duran-Martin, Gerardo and Altamirano, Matias and Shestopaloff, Alex and S\'{a}nchez-Betancourt, Leandro and Knoblauch, Jeremias and Jones, Matt and Briol, Francois-Xavier and Murphy, Kevin Patrick},
+  title     = {Outlier-robust {Kalman} Filtering through Generalised {Bayes}},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning},
+  year      = {2024},
+  volume    = {235},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {12138--12171},
+  publisher = {PMLR},
+  url       = {https://proceedings.mlr.press/v235/duran-martin24a.html}
+}
+
+% Verified 2026-09-11: official PMLR record and published full PDF.
+% Section 2.1 defines pool-based label acquisition followed by model updating.
+% Section 4, equations 3--4: EPIG averages predictive mutual information over
+% a target input distribution. Equation 5 relates it to expected cross-entropy
+% under the stated predictive model, not a guarantee of lower realised 0--1 error.
+% M7B does not implement EPIG, retrain on acquired labels, or compare with BALD.
+% Use for the distinction between information and task-relevant prediction;
+% do not claim the project's clipped score reproduces this objective.
+
+@inproceedings{bickfordsmith2023prediction,
+  author    = {Bickford Smith, Freddie and Kirsch, Andreas and Farquhar, Sebastian and Gal, Yarin and Foster, Adam and Rainforth, Tom},
+  title     = {Prediction-Oriented {Bayesian} Active Learning},
+  booktitle = {Proceedings of the 26th International Conference on Artificial Intelligence and Statistics},
+  year      = {2023},
+  volume    = {206},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {7331--7348},
+  publisher = {PMLR},
+  url       = {https://proceedings.mlr.press/v206/bickfordsmith23a.html}
+}
+
+% Verified 2026-09-11: arXiv v1 metadata and full HTML.
+% Sections 2.1--2.3 define targeted, misaligned and generic feedback and
+% SFS = F_T - (F_M + F_G)/2, where a flip is a correct revised answer.
+% Section 4 reports prompted-model behaviour; Section 3 specifies post-training.
+% Cite the contrastive design, not as a replication of v1 executable evidence.
+% SFS alone does not identify re-solving: zero can also occur when all flip
+% rates are zero. Report component rates and behavioural evidence when making
+% a mechanism claim. This is a preprint, not a human-learning validation study.
+% Publication status checked 2026-09-11: the author's publication page lists
+% this paper under review: https://doheejin.github.io/publications/
+
+@misc{do2026misconception,
+  author      = {Do, Heejin and Sonkar, Shashank and Sachan, Mrinmaya},
+  title       = {Simulating Students or Sycophantic Problem Solving? On Misconception Faithfulness of {LLM} Simulators},
+  year        = {2026},
+  eprint      = {2605.12748},
+  eprinttype  = {arXiv},
+  eprintclass = {cs.CL},
+  url         = {https://arxiv.org/abs/2605.12748v1},
+  note        = {Preprint}
+}
+
+% Verified 2026-09-11: UT Austin publication record and linked author manuscript.
+% Section 2, equations 1--2: expected classifier accuracy improvement divided
+% by feature acquisition cost. Algorithm 1 retrains from labelled training data;
+% it does not select diagnostic evidence for unlabelled evaluation cases.
+% Section 3 assumes equal costs for the main UCI experiments. Do not describe
+% the displayed results as measured monetary savings or variable-cost evidence.
+% The theoretical cost term supports the distinction from M7B's fixed allocation;
+% the project does not implement this method or compare performance with it.
+% DOI and pages verified 2026-09-11 against IEEE's Crossref deposit:
+% https://api.crossref.org/works/10.1109/ICDM.2005.23
+
+@inproceedings{melville2005acquisition,
+  author    = {Melville, Prem and Saar-Tsechansky, Maytal and Provost, Foster and Mooney, Raymond J.},
+  title     = {An Expected Utility Approach to Active Feature-value Acquisition},
+  booktitle = {Proceedings of the Fifth IEEE International Conference on Data Mining},
+  publisher = {IEEE},
+  year      = {2005},
+  pages     = {745--748},
+  doi       = {10.1109/ICDM.2005.23},
+  url       = {https://doi.org/10.1109/ICDM.2005.23}
+}
+
+% Verified 2026-09-11 against the official EDM full HTML and supplied BibTeX.
+% Section 2: Gaussian latent-state forecasts and response encodings learned
+% with a VAE objective. Section 3: prediction and posterior demonstrations.
+% Section 4 proposes expected-information-gain item selection and notes that
+% efficient approximation needs investigation. Do not describe this paper as
+% a completed selective-probing trial or as evidence of this project's benefit.
+% Its epistemic uncertainty is not equivalent to closeness of a single
+% predicted success probability to 0.5, used by this project's simple baseline.
+
+@inproceedings{christie2024dynamiclens,
+  author    = {Christie, S. Thomas and Cook, Carson and Rafferty, Anna N.},
+  title     = {Uncertainty-preserving Deep Knowledge Tracing with State-space Models},
+  booktitle = {Proceedings of the 17th International Conference on Educational Data Mining},
+  publisher = {International Educational Data Mining Society},
+  year      = {2024},
+  pages     = {909--914},
+  doi       = {10.5281/zenodo.12729995},
+  url       = {https://educationaldatamining.org/edm2024/proceedings/2024.EDM-posters.108/index.html}
+}
+
+% Verified 2026-09-11 against the published PDF hosted by co-author Alexander Hicks.
+% Section 3.2 and Table 2: augmented Java CodeWorkout data, 246 students,
+% 17 problems, 3,714 submissions and 305 test cases. This is not the project's
+% Python CSEDM corpus. Section 4.3, equation 4: joint code-generation and
+% test-outcome prediction losses, not optional evidence selection under a budget.
+% Table 3: five-seed model comparison; do not transfer its effect sizes to this study.
+% Supports prior use of test-level evidence in knowledge tracing, not a claim
+% that this dissertation improves TIKTOC or establishes a globally novel selector.
+
+@inproceedings{duan2025tiktoc,
+  author    = {Duan, Zhangqi and Fernandez, Nigel and Hicks, Alexander and Lan, Andrew},
+  title     = {Test Case-Informed Knowledge Tracing for Open-ended Coding Tasks},
+  booktitle = {LAK25: The 15th International Learning Analytics and Knowledge Conference},
+  publisher = {Association for Computing Machinery},
+  year      = {2025},
+  pages     = {238--248},
+  doi       = {10.1145/3706468.3706500},
+  url       = {https://doi.org/10.1145/3706468.3706500}
+}
+
+% Verified 2026-09-11 against the authors' corrected manuscript, dated 2011-02-09.
+% Sections 4--6 distinguish Monte Carlo sampling, exhaustive enumeration and
+% sampling with replacement. Section 6.2 discusses (b+1)/(m+1) as conservative.
+% Cite for the nonzero Monte Carlo calculation, not as proof that this project's
+% sign-exchangeability or independent-case assumptions hold.
+
+@article{phipson2010permutation,
+  author    = {Phipson, Belinda and Smyth, Gordon K.},
+  title     = {Permutation P-values Should Never Be Zero: Calculating Exact P-values When Permutations Are Randomly Drawn},
+  journal   = {Statistical Applications in Genetics and Molecular Biology},
+  year      = {2010},
+  volume    = {9},
+  number    = {1},
+  eid       = {39},
+  doi       = {10.2202/1544-6115.1585},
+  url       = {https://doi.org/10.2202/1544-6115.1585}
+}
+
+% Verified 2026-09-11 against the publisher's full text and publication metadata.
+% Methods, "The McNemar exact conditional test", equations 3--4, supports the
+% conditional binomial calculation. Discussion and Conclusions criticise its
+% conservatism and power; this source must not be cited as endorsing that choice.
+% Retaining the frozen test preserves the protocol, not a claim of optimal power.
+% Verified 2026-09-11: published full text at PMC4784504 and author metadata.
+% Sections 2.1--2.3 describe empirical resampling; Sections 4.1 and 4.4 discuss
+% percentile intervals and small-sample undercoverage. Section 4.6 recommends
+% a quantile convention different from the project's frozen linear convention.
+% Cite as method context and criticism, not proof of coverage for authored,
+% dependent cases or an endorsement of the chosen interval. Do not transfer
+% sample-size thresholds from its normal/exponential examples to this study.
+
+@article{hesterberg2015bootstrap,
+  author    = {Hesterberg, Tim C.},
+  title     = {What Teachers Should Know About the Bootstrap: Resampling in the Undergraduate Statistics Curriculum},
+  journal   = {The American Statistician},
+  year      = {2015},
+  volume    = {69},
+  number    = {4},
+  pages     = {371--386},
+  doi       = {10.1080/00031305.2015.1089789},
+  url       = {https://pmc.ncbi.nlm.nih.gov/articles/PMC4784504/}
+}
+
+
+@article{fagerland2013mcnemar,
+  author    = {Fagerland, Morten W. and Lydersen, Stian and Laake, Petter},
+  title     = {The {McNemar} Test for Binary Matched-Pairs Data: Mid-p and Asymptotic Are Better than Exact Conditional},
+  journal   = {BMC Medical Research Methodology},
+  year      = {2013},
+  volume    = {13},
+  eid       = {91},
+  doi       = {10.1186/1471-2288-13-91},
+  url       = {https://link.springer.com/article/10.1186/1471-2288-13-91}
+}
+
+% Verified 2026-09-11 against the DataShop dataset record and DOI supplied by the author.
+% The exact analysed archive and version remain identified in the local inventory.
+
+@dataset{csedm2019challenge,
+  author    = {Rivers, Kelly},
+  title     = {{CSEDM} 2019 Data Challenge},
+  publisher = {DataShop},
+  year      = {2019},
+  doi       = {10.60710/DATASET-2865},
+  url       = {https://doi.org/10.60710/DATASET-2865},
+  urldate   = {2026-09-11},
+  note      = {Novice Python programming data; analysed archive version 1.1}
+}
+
+% Verified 2026-09-11 against the JMLR publication record.
+% Cite for the library; frozen configuration and lockfile specify this project's implementation.
+
+@article{pedregosa2011scikit,
+  author    = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and Duchesnay, {\'E}douard},
+  title     = {Scikit-learn: Machine Learning in {Python}},
+  journal   = {Journal of Machine Learning Research},
+  year      = {2011},
+  volume    = {12},
+  number    = {85},
+  pages     = {2825--2830},
+  url       = {https://jmlr.org/papers/v12/pedregosa11a.html}
+}
+
+% Verified 2026-09-11: publisher metadata; Section 5.7, pp. 176--177,
+% especially equations 5.98--5.99 (posterior expected loss and its minimiser).
+% Supports established decision theory, not the project's clipped acquisition score,
+% its robustness, or the post-freeze counterexample.
+
+@book{murphy2012machine,
+  author    = {Murphy, Kevin P.},
+  title     = {Machine Learning: A Probabilistic Perspective},
+  publisher = {The MIT Press},
+  year      = {2012},
+  isbn      = {9780262018029},
+  url       = {https://mitpress.mit.edu/9780262018029/machine-learning/}
+}
+
+% Verified 2026-09-12: peer-reviewed journal version and publisher metadata.
+% The shorter IJCAI version is superseded here by the expanded article.
+% Supports evidence semantics; does not validate the legacy confidence transformation
+% or establish that the project's clipped update is an ordinary Bayesian posterior.
+
+@article{chan2003uncertain,
+  author       = {Chan, Hei and Darwiche, Adnan},
+  title        = {On the Revision of Probabilistic Beliefs using Uncertain Evidence},
+  journaltitle = {Artificial Intelligence},
+  year         = {2005},
+  volume       = {163},
+  number       = {1},
+  pages        = {67--90},
+  doi          = {10.1016/j.artint.2004.09.005},
+  url          = {https://doi.org/10.1016/j.artint.2004.09.005}
+}
+
+% Verified 2026-09-11: official EDM proceedings index, author list and full HTML.
+% Sections 3.2--3.4 describe dialogue features, convex fusion and the RL objective.
+% Sections 3.1 and 4.1 give different cohort definitions; do not transfer the
+% numerical fairness claims. PDF access was blocked; no page range is inferred.

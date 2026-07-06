@@ -83,7 +83,6 @@ across interactions without an explicit binary mastery variable for each skill
 The present studies use transparent, authored probabilities for a different reason: they test how a prediction changes after
 one additional coding check. They do not fit a learner model from the 23 authored cases.
 
-
 Learner models also differ in what they allow to vary. Reviews cover probabilistic, cognitive and item-based approaches
 \parencite{desmarais2012learner}. Individualised Bayesian knowledge tracing has shown that learner-specific rates can improve
 prediction for unseen students. In that evaluation, the model could not use fitted personal parameters for the test learners.
@@ -129,7 +128,6 @@ prior is known \parencite[pp. 69--74, 77--78]{chan2003uncertain}. A statement ab
 description is intended.
 
 Consider a success probability of $0.2$, giving prior odds of $1:4$. Evidence with a likelihood ratio of $4$ changes those
-
 odds to $1:1$, so the revised probability is $0.5$. Requiring a revised probability of $0.8$ instead gives odds of $4:1$.
 Reaching that value from the same prior would require a likelihood ratio of $16$. This illustrative calculation shows why
 evidence strength and revised belief cannot be substituted for each other.
@@ -190,3 +188,125 @@ classification error. The relevant lesson is to specify which future prediction 
 the actual decision rule. A shared prediction-oriented motivation does not make the clipped-belief score equivalent to EPIG,
 or allow its negative result to stand as a comparison against that method.
 
+An uncertain prediction is not necessarily one that an extra observation can improve. For the binary decision studied here,
+uncertainty-only selection ranks probabilities nearest to one half. A decision-value calculation instead needs a model of the
+possible observations and the action that would follow each one. Expected-loss minimisation is established decision theory
+\parencite[Section 5.7]{murphy2012machine}. The dissertation's implementation must be judged against that definition.
+
+This distinction matters for the completed experiment. The probe-selection study uses a change in clipped-belief scores to rank candidates, while
+the measured outcome is classification error. These quantities need not agree, as the counterexample in \cref{ch:method}
+shows. Calling the score ordinary value of information would therefore obscure a methodological difference. Its lower
+calibration quantile also represents caution within the assumed model. It gives no protection against failure mechanisms
+that the model omits.
+
+Tang and colleagues examine the related problem of Bayesian active learning under model misspecification. Their analysis
+considers how selected training data can differ from the target distribution and how updates can amplify or reduce error.
+R-IDeA incorporates representativeness, information and error-reduction considerations into acquisition
+\parencite[Sections 3--4]{tang2026robust}.
+
+The theoretical setting is specific. Theorem 1 concerns squared-error generalisation for an empirical risk minimiser in a finite
+model class, with bounded functions and outcomes. The bound includes a training-to-test density-ratio factor. These conditions
+matter. Remark 3 distinguishes that empirical-risk-minimisation assumption from the paper's Bayesian experiments, which predict
+using a distribution over models. The theorem informs acquisition design, but should not be read as a guarantee for any rule
+described as Bayesian or reliability-aware. This comparison checks the stated assumptions, rather than independently verifying
+the complete appendix proof.
+
+The probe-selection study does not implement R-IDeA or test its theoretical bounds. It performs a single batch allocation, keeps calibration fixed
+and evaluates deliberately altered observation channels. Its lower quantile and bounded update are different mechanisms.
+It neither fits the theorem's empirical risk minimiser nor establishes its bound for the binary classification endpoint.
+The connection is the possibility that the same wrong model can distort both evidence selection and the interpretation of
+what is collected. This motivates separate evaluation environments. It does not validate the project's chosen fault rates
+or establish that its heuristic is robust.
+
+The completed comparison consequently supports a limited methodological lesson. A cautious-looking acquisition score must
+still be checked against the decision that is executed, and its empirical performance must be measured when assumptions
+change. The frozen negative result concerns this implementation. It cannot establish that Bayesian acquisition methods in
+general fail, or that R-IDeA would perform better on these cases without a separate comparison.
+
+\subsection{Selecting Tests When Their Outcomes Are Noisy}
+
+Noisy test selection already has a substantial mathematical treatment. Chen and colleagues' ECED method selects tests
+sequentially to identify a hidden target, using a surrogate objective and an error-based stopping rule
+\parencite[Sections 2--3]{chen2017noisy}. The model specifies a known distribution over root causes and known observation
+parameters. Tests are conditionally independent given a root cause, although they may remain dependent given the target.
+Each test has unit cost, and persistent noise means that repeating it returns the same outcome.
+
+Theorem 1 bounds the number of tests under binary outcomes and test-specific noise rates independent of the root cause.
+Its reference is an optimal policy achieving a stricter error target \parencite[Section 3, Theorem 1]{chen2017noisy}.
+This is not a guarantee for arbitrary correlated corruption or an unknown, misspecified observation model. The comparison
+here checks the theorem's statement and assumptions. It does not independently verify the supplementary proof.
+
+This sharpens the boundary of the dissertation's contribution. The probe-selection study estimates channel reliability, selects a fixed batch and
+clips belief updates. It neither implements ECED nor proves a link between its ranking score and optimal test selection.
+Although both methods use a surrogate score, ECED's stated theoretical connection cannot be transferred to the project's heuristic by analogy.
+Conversely, the heuristic's negative result says nothing about how ECED would perform in an appropriately defined comparison.
+
+The useful distinction is therefore the particular decision rule and evaluation, rather than a claim to introduce noisy
+evidence acquisition. The project examines a limited batch heuristic under specified faults and identifies where its score
+and executed decision diverge. A sequential method with a stopping rule would answer a different question and require a
+separate experimental design.
+
+Jia and colleagues study noisy decision trees with a different objective: identify the hidden hypothesis while minimising
+expected test count \parencite[Sections 1--2]{jia2024noisy}. Their binary model supplies a hypothesis prior and the positions
+of noisy entries in a test matrix. Outcomes at those entries are uniform and conditionally independent given the hypothesis.
+Repeating a test returns its previous outcome. The main identification assumption ensures that deterministic tests can
+distinguish any pair of hypotheses. Section 7 considers relaxations.
+
+The authors explicitly distinguish exact identification from the permitted error in ECED
+\parencite[Section 1.2]{jia2024noisy}. This places both methods within established noisy-test selection, with different
+assumptions and objectives. The probe-selection study instead estimates potentially wrong channel reliability and measures classification error
+after a fixed allocation. It does not implement either algorithm or inherit their approximation guarantees. These differences
+explain why a direct superiority claim would be inappropriate. They do not establish novelty by themselves.
+
+\subsection{Limiting the Influence of Misleading Observations}
+
+Robust filtering addresses what happens after an observation is acquired. Duran-Martin and colleagues propose the weighted
+observation likelihood filter (WoLF), which uses generalised Bayesian updating to reduce the influence of outlying measurements
+\parencite{duranmartin2024outlier}. Their approach weights the observation log-likelihood and derives closed-form updates for
+Gaussian filtering, with extensions to nonlinear settings. The comparison here uses Sections 3.1--3.4 of the
+\href{https://utstat.utoronto.ca/~alexander/wolf-icml.pdf}{co-author-hosted manuscript}.
+
+Their robustness statement has a specific meaning. Section 3.4, Theorem 3.2 considers linear Gaussian models or their linearised
+approximation and imposes conditions on the weighting function. It bounds the divergence between posteriors obtained from an
+original observation and an arbitrarily contaminated replacement. That is a statement about posterior sensitivity under those
+conditions. It should not be substituted for a claim about classification accuracy or learning.
+
+The bounded-update study takes a simpler route. It caps the log-likelihood-ratio contribution to a binary belief update and applies fixed channel
+trust. The cap bounds one observation's contribution to log-odds. It neither implements WoLF nor establishes its posterior
+influence theorem. Repeated misleading updates can still accumulate, and clipping can discard useful evidence as well as limit
+harmful evidence. The project's adverse-condition and clean-condition comparisons test that trade-off under authored rules.
+
+Together, robust filtering and active acquisition suggest two separate design questions: how strongly to update after a check,
+and which check to request beforehand. This dissertation evaluates both through distinct studies, but their combination alone
+does not establish a new robustness theorem. Its claim rests on the measured behaviour and stated limitations of the implemented
+rules.
+
+\subsection{Learning How Much Weight to Give Existing Evidence}
+
+Zhang and colleagues describe a reinforcement-learning gate that combines behavioural and dialogue-derived prediction
+streams. The gate assigns a convex weight to their logits. Its training objective includes predictive utility, a cohort
+disparity penalty and entropy regularisation \parencite[Sections 3.2--3.4]{zhang2026fusion}. This is a close precedent for
+adaptive evidence weighting in educational prediction.
+
+The action differs from probe allocation. The gate weights features already available to the predictor. This dissertation's selector chooses which
+cases receive another observation, using a fixed ranking rule rather than a policy learned through reinforcement learning.
+The bounded-update study's channel trust is also fixed. The dissertation therefore does not reproduce the learned gate or compare its performance
+with the proposed method.
+
+The source's evaluation descriptions require caution. Section 3.1 groups learners by total practice volume, whereas
+Section 4.1 describes within-learner progress using $t/T$ \parencite{zhang2026fusion}. Those groupings answer different
+questions. The architectural comparison remains useful, but this review does not adopt the reported fairness gains or
+resolve that ambiguity. More broadly, evidence weighting, evidence acquisition and changes in learning each require their
+own outcome and comparison. Sharing an adaptive-learning application does not make them interchangeable.
+
+\subsection{Acquisition Cost and Fixed Allocations}
+
+Melville and colleagues study the acquisition of missing feature values for classifier training. Their score averages the
+estimated improvement in classifier accuracy over possible feature values, divided by acquisition cost
+\parencite[Section 2, equations 1--2]{melville2005acquisition}. The classifier is retrained as values are acquired.
+This establishes a direct precedent for choosing observations according to expected benefit and cost. The paper's main
+experiments assume equal acquisition costs. Their results should not be described as measurements of monetary savings.
+
+The probe-selection study differs in both timing and objective. It allocates checks to evaluation cases, retains its fitted calibration model and
+
+% Note: explore empirical trade-offs of bandit policies
