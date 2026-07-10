@@ -58,7 +58,6 @@ evaluator receives the later task outcome and uses it to score each prediction.
 
 The system first checks that the input recordings contain no later task responses. It verifies the input hashes, executes
 the evidence programs, saves the predictions and records missing cases. It then creates a global decision seal, a record
-
 linking the complete set of saved predictions to their input and run identities. Before requesting the later responses, the
 next phase requires a matching seal and checks the number of complete cases. This order lets a reader inspect which
 predictions were saved before the outcomes became available. A repository owner can still open local criterion files manually
@@ -109,3 +108,28 @@ it, so this is not a streaming memory bound. The redirection also does not estab
 write by hostile code. The timeout and remote memory limit remain distinct safeguards, rather than proof that output attacks
 are fully handled.
 
+Submission code and the test harness execute within the same remote Python process. The design therefore does not establish
+an adversary-resistant grading boundary between them. A valid result schema alone cannot prove that hostile code did not
+interfere with the reported result. This proof of concept was used for recorded model submissions. Opening it to arbitrary
+public users would require a separate security review and stronger assessment-integrity controls.
+
+The network-free adapter tests check request forwarding, visible-output truncation, missing exit-code handling and failure
+without local fallback. Test-harness checks cover submission extraction, supported authored test shapes and the corrected
+sequence-value comparison. These test scopes are inspectable in the repository. Mock process tests do not verify Modal's
+live network isolation or resource enforcement. A recorded development rehearsal completed four remote executions and nine
+authored checks, establishing that the configured path worked for those fixtures. It was not a penetration test or a
+general guarantee about arbitrary submissions.
+
+\section{Verification Evidence and Its Boundaries}
+
+The graph contract is exercised by \texttt{tests/unit/test\_graph.py}, which compares the graph result with the pure turn
+contract. This checks agreement between two implementation paths for its fixture. Pedagogical assessment would require a
+separate study. Inspection of \texttt{graph/turn\_graph.py} establishes the fixed node order and confirms that action selection
+receives evidence rather than the updated score.
+
+\texttt{tests/unit/test\_benchmark\_global\_seal.py} exercises restart verification, changed decision records, missing and
+conflicting accounting, unplanned conditions and publication failure. Those checks support the application-level record
+boundary described above. They do not establish that the original execution environment was free from manual access or
+that every process had an operating-system-enforced restriction on criterion files.
+
+\texttt{tests/unit/test\_modal\_sandbox.py} uses a fake client to check forwarded requests and limits, bounded retained output,
