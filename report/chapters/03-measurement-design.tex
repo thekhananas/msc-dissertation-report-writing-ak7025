@@ -78,3 +78,66 @@ that relevance never matters for a richer tracker.
 Two reviewers assessed the 24 public responses: an MSc Computing student and a senior software engineer. Each received a CSV
 containing the case identifier, public prompt, visible response and response hash, together with the shared category guide.
 The packet excluded executable probes, test results, criterion material, authored evidence patterns and condition predictions.
+
+Here, blinded refers to those withheld materials. It does not imply that every aspect of the study or model identity was hidden.
+No case-specific answer key was supplied.
+
+Reviewers were instructed to enter a category and a short rationale for each response, without changing the packet fields.
+The guide applies categories in this order: empty, conflicting, uncertain, correct, misconception, then incorrect. Empty means
+there is no assessable answer. Conflicting means the response commits to incompatible answers or explanations. Uncertain means
+it offers only doubt or a guess without committing. Correct requires both the answer and its explanation to follow from the
+visible prompt. Misconception identifies a wrong answer supported by a specific false rule. Incorrect covers a wrong answer
+without enough explanation to identify such a rule. This precedence prevents a correct final line from automatically overriding
+an earlier incompatible commitment. The guide supplies fixed confidence values, but the v1 tracker ignores that field.
+
+The author-recorded procedure states that the reviewers completed their sheets independently, with the student completing
+first. Neither saw the other's decisions, executable evidence or criterion material, and neither used additional tools.
+This account was recorded after rating and before criterion access. It documents the declared procedure. The software cannot
+independently establish what a reviewer saw outside the supplied packet. File hashes bind the procedure record to the submitted
+ratings and guide, rather than proving reviewer independence.
+
+The author was the planned adjudicator for genuine disagreements before predictions were sealed. The two submissions agreed
+on every category, so no adjudication was required. Raw agreement and unweighted Cohen's kappa are reported in
+\cref{ch:evaluation}. Agreement measures consistency of these submitted ratings. It does not validate the categories as
+measurements of learning or establish complete coverage of possible response failures. The later failure review served a
+different purpose and was not used to revise these public ratings.
+
+\section{Outcomes and Paired Comparisons}
+
+For eligible case $i$, condition $c$, binary prediction $\hat y_{ic}$, and later outcome $y_i$, classification error is
+
+\begin{equation}
+  L_{ic}=\mathbf{1}[\hat y_{ic}\neq y_i].
+\end{equation}
+
+The saved reports refer to the related-evidence condition as "valid probe". This identifies its intended relation to the target
+concept. It does not certify the tests or their interpretation. The paired effect comparing dialogue-only condition $d$ with
+this related-evidence condition $v$ is
+
+\begin{equation}
+  \bar d=\frac{1}{N}\sum_{i=1}^{N}(L_{id}-L_{iv}),
+\end{equation}
+
+where positive values favour the additional probe. One criterion execution was missing, leaving 23 eligible pairs.
+
+An outcome of success means that the submitted criterion program passed its authored checks. It does not establish that
+the tests cover every requirement. Invalid submissions and unavailable execution outcomes remain distinct from completed
+checks that fail. Neither is silently assigned a binary failure. The missing-case sensitivity appears in \cref{ch:evaluation}.
+
+The secondary contrasts compare valid evidence with unrelated evidence and corrupted evidence separately. A combined contrast
+averages those two paired differences. A positive combined value alone cannot demonstrate a relevance-specific benefit:
+poorer performance under corrupted evidence can make the average positive even when valid and unrelated evidence are tied.
+Cases share concepts and misconceptions, so the 23 pairs do not represent 23 independently sampled programming topics.
+
+Figure~\ref{fig:study-design} shows when predictions and outcomes entered the workflow. Saving predictions before requesting
+the later task makes it possible to check which evidence informed each decision. Chapter~\ref{ch:system} explains how the
+application verifies those records and the limits of that protection.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{assets/figures/ch03-measurement/external_study_design.pdf}
+  \caption{Study sequence for 24 authored programming cases. Four predictions per case were saved before requesting the later
+  coding task. An outcome was scored for 23 cases. A fixed language model supplied the responses. Record hashes and workflow
+  checks support verification of this order. Local files can still be edited outside the application.}
+
+% Draft notation: check whether P(correct | obs) requires sensitivity bounds
