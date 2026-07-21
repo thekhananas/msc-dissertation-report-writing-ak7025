@@ -78,7 +78,6 @@ that relevance never matters for a richer tracker.
 Two reviewers assessed the 24 public responses: an MSc Computing student and a senior software engineer. Each received a CSV
 containing the case identifier, public prompt, visible response and response hash, together with the shared category guide.
 The packet excluded executable probes, test results, criterion material, authored evidence patterns and condition predictions.
-
 Here, blinded refers to those withheld materials. It does not imply that every aspect of the study or model identity was hidden.
 No case-specific answer key was supplied.
 
@@ -139,3 +138,58 @@ application verifies those records and the limits of that protection.
   \caption{Study sequence for 24 authored programming cases. Four predictions per case were saved before requesting the later
   coding task. An outcome was scored for 23 cases. A fixed language model supplied the responses. Record hashes and workflow
   checks support verification of this order. Local files can still be edited outside the application.}
+  \label{fig:study-design}
+\end{figure}
+
+The original sealed analysis remains part of the scientific record. A later full replay found a systematic sequence-comparison
+fault in the authored test harness. The repair changed 19 of 48 execution records: 17 binary labels, one test-count record
+whose binary label stayed unchanged, and one missing outcome's failure status. Chapter~\ref{ch:evaluation} compares the
+original result with the complete correction and bases its interpretation on the corrected outcomes.
+
+\section{Statistical Procedure and Interpretation}
+
+The analysis rules developed in stages. The original specification named Brier difference, with classification error as
+the fallback for uncalibrated scores, and listed McNemar among exploratory analyses. The later inferential hierarchy,
+dated 1 September 2026 and required before criterion access, explicitly selected classification error and exact McNemar
+for the primary comparison. It retained sign swapping and subgroup checks as secondary. This clarification followed
+collection of the public and evidence responses. It therefore records a staged specification of the analysis.
+
+The frozen analysis reports the mean paired error difference, a 95\% paired percentile bootstrap interval, and an exact
+two-sided McNemar test at level 0.05. It also compares the observed mean with the declared minimum interpretable effect of
+0.10 (ten percentage points). Reaching that threshold is a descriptive comparison of the mean, not proof that the true effect
+exceeds it. No single significance flag replaces the effect estimate, interval and limitations.
+
+For these fixed cases and recorded responses, the observed difference is a descriptive quantity calculated directly from
+the saved outcomes. An uncertainty interval requires assumptions about what could vary. Here, resampling changes which
+recorded cases contribute to the mean. It does not collect new observations or establish a sampling model for new topics.
+
+For the bootstrap, each draw samples $N$ complete case differences with replacement and calculates their mean. Conditions
+within a case stay paired. The implementation uses 10,000 draws and the 2.5th and 97.5th percentiles, with linear interpolation
+between ordered draws. The corrected analysis retains seed 20260813. This procedure is conditional on the saved responses and
+outcomes. It does not repeat model generation. Cases are resampled individually, so shared misconceptions and concepts are
+not preserved as clusters. The interval is reported as the frozen case-resampling summary, with no claim that it provides
+95\% coverage across courses, programming concepts or repeated model runs.
+
+The percentile construction uses quantiles of the resampled statistic, as described by
+\textcite{hesterberg2015bootstrap}. That source also documents small-sample undercoverage:
+nominal 95\% intervals can contain the target less often than their label suggests. Its numerical examples concern particular
+distributions. They do not supply a coverage estimate or a sample-size threshold for these discrete authored-case differences.
+
+The implementation also retains its original linear quantile convention, rather than the alternative convention recommended
+by Hesterberg. The citation explains the procedure and its weaknesses, without endorsing every implementation
+choice. Increasing the number of resamples reduces simulation noise in the interval calculation. It does not add independent
+cases or resolve weaknesses in the sampling design. The frozen interval is retained transparently, rather than replaced after
+seeing the corrected outcome. A future study should choose its resampling unit and interval together with its case design.
+
+McNemar's test uses only cases where the two predictions differ in correctness. Let $b$ count cases where dialogue is correct
+and valid evidence is wrong, and let $c$ count the reverse. The implemented exact conditional two-sided value follows the
+binomial formulation described by \textcite{fagerland2013mcnemar}:
+\begin{equation}
+  p_{\mathrm{exact}}=\min\left(1,\;2\sum_{j=0}^{\min(b,c)}
+  \binom{b+c}{j}2^{-(b+c)}\right).
+\end{equation}
+With no discordant pairs the value is set to one. The calculation is exact under the binomial null for independent discordant
+pairs. The word exact does not remove the authored-case dependence or sampling limitations. A non-significant result does
+not establish equivalence. The corrected study has only one discordant pair, which limits what this test can distinguish.
+
+The exact conditional test controls its nominal false-positive rate under its assumptions, at the cost of conservatism.
