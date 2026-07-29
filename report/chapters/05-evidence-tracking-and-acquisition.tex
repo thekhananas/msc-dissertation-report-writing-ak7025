@@ -1,4 +1,108 @@
+% Working formulation of bounded Bayesian update
 \chapter{Evidence Tracking and Probe Selection}
-\label{ch:evidence-tracking}
+\label{ch:method}
 
-% Mathematical formulation of tracker.
+An extra coding check can change a prediction, but its result may be unreliable. This chapter explains how the project limits
+the influence of one observation and chooses which cases receive a check when the number of checks is restricted. The
+simulations make the underlying state and evidence faults known, allowing these decisions to be examined directly.
+
+The final section applies a simpler uncertainty ranking to recorded student activity. It tests whether uncertain predictions
+contain a larger share of errors. Together, these methods examine how evidence changes an estimate and where further checking
+might be useful.
+
+\section{Bounded Bayesian Updating}
+
+The tracker maintains a probability estimate and revises it after each observation. An ordinary Bayesian update gives more
+weight to results that strongly distinguish the two possible states. The modification below limits that weight, because a
+faulty check can otherwise cause a large change. The bound controls the size of the update. Whether it improves predictions
+is tested in the experiments.
+
+For observation channel $c$, category $z$, and binary state $K_t$, let
+$O_c(z,k)=P(Z=z\mid K_t=k,c)$. The state is a binary variable defined by the simulator.
+Let $p_t$ be the model's estimated probability of $K_t=1$ before the observation, conditional on the available history.
+It need not equal the generating process's conditional probability when the model is wrong. With positive likelihoods,
+Bayes' rule gives
+\begin{equation}
+ p_t^+=\frac{p_tO_c(z,1)}{p_tO_c(z,1)+(1-p_t)O_c(z,0)},
+ \qquad
+ \frac{p_t^+}{1-p_t^+}=\frac{p_t}{1-p_t}\frac{O_c(z,1)}{O_c(z,0)}.
+\end{equation}
+Taking logarithms yields the ordinary additive log-odds update. This identity assumes the stated observation likelihoods are
+appropriate conditional on the history. Applying several fixed channel likelihoods in succession also assumes the relevant
+conditional independence. Correlated evidence can violate that assumption.
+
+The project then modifies the update using fixed trust $0\leq\eta_c\leq1$ and clipping limit $\kappa>0$:
+
+\begin{equation}
+  \operatorname{logit}(p_t^+)=\operatorname{logit}(p_t)+
+  \eta_c\,\operatorname{clip}\!\left(
+    \log\frac{O_c(z,1)}{O_c(z,0)},-\kappa,\kappa
+  \right).
+\end{equation}
+
+For positive channel likelihoods, an interior prior and non-negative trust, one observation contributes at most $\eta_c\kappa$
+to log-odds in absolute value. Across $T$ observations, the sum of the absolute evidence contributions is bounded by
+$\sum_{t=1}^{T}\eta_{c_t}\kappa$. Learning and forgetting transitions are separate from this bound.
+This is a per-observation bound, not a bound on total movement over a complete episode. Repeated observations can add their
+contributions, and the learning and forgetting transitions can also move the estimate. Repeated misleading evidence can
+therefore still accumulate substantial influence. Neither calibration nor lower prediction error follows from clipping alone.
+The robustness finding is empirical, under the declared simulator.
+
+Equal likelihoods contribute zero. With $\eta_c=1$ and no active clipping, the ordinary Bayesian update is recovered. Otherwise,
+the bounded value is a modified belief update and need not be the exact posterior under the original observation model.
+The channel-aware variants use category and channel. Their shared input's confidence field is retained but does not multiply
+the likelihood again. This is a fixed estimator choice, not learned trust.
+
+The frozen tracker uses $\kappa=2$. Trust weights are 0.50 for public answers, 0.90 for executable probes and 0.40 for
+self-explanations. These authored weights limit a single observation's log-odds contribution to 1.0, 1.8 and 0.8 respectively.
+They express the study's assumptions about evidence handling and were not estimated from learner data.
+
+The numerical implementation restricts probabilities to $[f_0,1-f_0]$, where $f_0=10^{-6}$, before taking log-odds and
+after a non-zero update. The equation above describes the update before this final restriction. For a prior already within
+these limits, restricting the result cannot enlarge its movement in log-odds. An input outside those limits is first adjusted.
+That adjustment is separate from the bounded evidence contribution. Missing evidence retains the supplied prior.
+
+After the evidence update, the tracker forms the next-turn prior using learning probability $l$ and forgetting probability $f$:
+\begin{equation}
+ p_{t+1}=p_t^+(1-f)+(1-p_t^+)l.
+\end{equation}
+This ordering separates evidence about the current state from the subsequent transition. For probabilities in $[0,1]$, the
+transition remains in $[0,1]$ as a weighted average. This mechanical property does not validate the transition as a model of
+human learning. The implementation applies the numerical probability limits before and after this transition as well.
+These transitions apply to the study of bounded updates. The probe selection experiment in
+Section~\ref{sec:probe-selection} keeps each case's outcome fixed during selection.
+
+\subsection{Tracker Baselines and Confidence}
+
+The five trackers in the bounded update study differ in how they use an observation. All retain the prior when evidence is missing, before any separate
+state transition. The last-observation baseline assigns $1-f_0$ after supporting evidence and $f_0$ after opposing evidence,
+where the numerical probability floor is $f_0=10^{-6}$. This deliberately discards the previous estimate.
+
+The hard-BKT baseline uses fixed slip $s=0.15$ and guess $g=0.20$. Its likelihood pair for supporting evidence is
+$(1-s,g)$, and for opposing evidence it is $(s,1-g)$, ordered by simulated state $K=1$ and $K=0$.
+These parameters are authored rather than fitted to learner records.
+
+For the legacy fractional baseline, let $c\in[0.5,1]$ denote the observation's confidence field, as required by the input contract.
+Define $\rho=c$ for supporting
+evidence and $\rho=1-c$ for opposing evidence. With fixed $\epsilon=0.15$, the implemented likelihood-like quantities are
+\begin{equation}
+ \widetilde L_1=(1-\epsilon)^\rho\epsilon^{1-\rho},\qquad
+ \widetilde L_0=\epsilon^\rho(1-\epsilon)^{1-\rho}.
+\end{equation}
+Their contribution to log-odds is therefore
+\begin{equation}
+ \log\frac{\widetilde L_1}{\widetilde L_0}
+ =(2\rho-1)\log\frac{1-\epsilon}{\epsilon}.
+\end{equation}
+Confidence $c=0.5$ contributes zero. Increasing confidence strengthens the contribution in the category's direction.
+This is the frozen transformation, not a calibrated probability of correctness or a claim that confidence specifies a
+Jeffrey update. The distinction between evidence strength and a prescribed revised belief is discussed in
+\cref{ch:related-work} \parencite{chan2003uncertain}.
+
+The remaining baselines use the channel likelihoods defined above: one applies the ordinary likelihood ratio, while the
+bounded variant applies trust and clipping. Neither uses the confidence field. Comparing these trackers thus changes the
+observation model as well as, in some comparisons, the update size. Only the channel-aware versus bounded-channel-aware
+comparison holds the channel model fixed. Even there, trust weighting and clipping are combined unless separately ablated.
+
+
+% Note: check truncation bound epsilon against empirical error floor
