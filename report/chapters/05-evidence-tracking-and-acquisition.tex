@@ -1,4 +1,3 @@
-% Working formulation of bounded Bayesian update
 \chapter{Evidence Tracking and Probe Selection}
 \label{ch:method}
 
@@ -105,4 +104,23 @@ observation model as well as, in some comparisons, the update size. Only the cha
 comparison holds the channel model fixed. Even there, trust weighting and clipping are combined unless separately ablated.
 
 
-% Note: check truncation bound epsilon against empirical error floor
+\section{Selecting Probes Within a Fixed Budget}
+\label{sec:probe-selection}
+
+Each simulated episode in the probe selection study contains 40 cases. Every ordinary policy sees the same prior estimates and permitted features, then
+selects exactly 20 probes before any selected outcome is revealed. The allocation is compulsory, and every selected probe has
+the same unit cost. Random selection,
+uncertainty-only selection, a plug-in clipped-belief comparator, and the reliability-aware clipped-belief heuristic all spend
+the full allocation. Zero or negative scores do not stop selection. Never-probe and always-probe define endpoints. This is
+one-step batch selection, without conversational adaptation.
+
+For each case, the simulator draws a starting probability from $\operatorname{Beta}(2,2)$ and clips it to $[0.05,0.95]$.
+It then draws $Y_i\sim\operatorname{Bernoulli}(p_i)$ and supplies that same clipped $p_i$ to the policy. Each episode contains
+ten families, with one case from each of the four probe classes in every family. Starting
+probabilities are calibrated by construction. Held-out environments change evidence reliability, error balance, relevance,
+inversion, missingness or dependence. They do not test inaccurate starting probabilities. No learning transition occurs within
+a case in this experiment, and the policy cannot inspect the hidden outcome or generating channel rates.
+
+\subsection{Calibration and the Implemented Score}
+
+Sensitivity is the chance that a probe passes when $Y=1$. Specificity is the chance that it fails when $Y=0$. Each has a separate
