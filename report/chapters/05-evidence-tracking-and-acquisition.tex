@@ -103,7 +103,6 @@ bounded variant applies trust and clipping. Neither uses the confidence field. C
 observation model as well as, in some comparisons, the update size. Only the channel-aware versus bounded-channel-aware
 comparison holds the channel model fixed. Even there, trust weighting and clipping are combined unless separately ablated.
 
-
 \section{Selecting Probes Within a Fixed Budget}
 \label{sec:probe-selection}
 
@@ -124,3 +123,48 @@ a case in this experiment, and the policy cannot inspect the hidden outcome or g
 \subsection{Calibration and the Implemented Score}
 
 Sensitivity is the chance that a probe passes when $Y=1$. Specificity is the chance that it fails when $Y=0$. Each has a separate
+$\operatorname{Beta}(1,1)$ prior. For $x$ successes in $n$ calibration trials, its posterior is
+$\operatorname{Beta}(1+x,1+n-x)$. These trials are simulated from declared channel rates, not collected from students.
+Three probe classes use 160 trials per parameter, while the sparse class uses 12. Calibration remains fixed during evaluation.
+The dense and sparse high-reliability classes share sensitivity 0.90 and specificity 0.92. The other dense classes use
+$(0.78,0.82)$ and $(0.92,0.64)$. Each class contributes ten cases per episode. The shared rates of the first two classes let
+the experiment vary calibration sample size while holding their generating reliability constant.
+
+Under symmetric zero-one loss, predicting success incurs expected loss $1-p$, while predicting failure incurs expected loss $p$.
+Choosing the smaller gives $R(p)=\min(p,1-p)$ for a coherent probability $p$. This follows the standard posterior expected-loss
+decision rule \parencite[Section~5.7, pp.~176--177]{murphy2012machine}.
+Let $T_\kappa(p,z;\theta)$ denote the clipped update using sensitivity and specificity $\theta$. The frozen ranking score is
+\begin{equation}
+ s_i=Q_{0.10,\,\theta\mid D_{\mathrm{cal}}}
+ \left[R(p_i)-\mathbb{E}_{Z\mid p_i,\theta}
+ R\!\left(T_\kappa(p_i,Z;\theta)\right)\right].
+\end{equation}
+The implementation uses 8,192 reliability draws with a fixed seed and $\kappa=2$. It takes the lower quantile of these scores
+and selects the highest-ranked cases. The plug-in comparator substitutes posterior mean reliability into the same score.
+The sample quantile uses linear interpolation. This score averages over pass and fail only. It does not model the probability
+of receiving no result. Missing results enter the evaluation environments, where they consume a selected probe and leave its
+starting probability unchanged. Thus, the ranking calculation has no explicit penalty for a probe that may return no evidence.
+The lower quantile is cautious within the assumed calibration model. It provides no guarantee against failure mechanisms
+outside that model.
+
+\subsection{When the Selection Score Overstates the Benefit}
+
+The frozen code and some historical artefacts call these scores EVSI. In this report they are called lower-quantile clipped-risk
+scores, because EVSI would suggest a stronger decision-theoretic identity than the implementation has. Clipping generally breaks the correspondence between
+the updated belief and the joint model used to average over observations. The score can change when the classification does not.
+For $p=0.95$, sensitivity and specificity $0.9$, and $\kappa=2$, passing produces belief $0.992927$ and failing produces
+$0.719995$. Table~\ref{tab:acquisition-counterexample} shows the resulting decisions.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    Information available & Belief in success & Saved prediction \\
+    \midrule
+    Before the check & $0.950000$ & Success \\
+    Check passes & $0.992927$ & Success \\
+    Check fails & $0.719995$ & Success \\
+    \bottomrule
+  \end{tabular}
+  \caption{A counterexample using the frozen clipping bound. The belief changes after either possible check result, but the
+  predicted class remains success. The check therefore cannot reduce classification error for this case under the stated model.}
