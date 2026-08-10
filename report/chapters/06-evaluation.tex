@@ -1,11 +1,40 @@
 \chapter{Evaluation}
 \label{ch:evaluation}
 
-\section{External-Model Study Preliminary Findings}
+\section{External-Model Study and Harness Correction}
 
-In the initial sealed benchmark run, executable evidence showed a substantial apparent advantage over dialogue alone,
-increasing correct predictions from 13/23 to 20/23 (a nominal 30.43 percentage-point gain).
-However, the paired interval was wide and the exact McNemar comparison gave $p=0.0923$.
-The verification protocol requires auditing execution traces to ensure string and sequence comparison validity.
+After correction, executable evidence improved one of 23 eligible predictions and caused no regressions, an observed gain of
+4.35 percentage points. Related and unrelated passing evidence produced identical binary decisions. The corrected result
+leaves a useful benefit unresolved and provides no evidence that this tracker recognised the relevance of a passing check.
 
-% AUDIT NOTE: Inspecting test harness output comparison logic for sequence types...
+The original sealed analysis suggested a 30.43 percentage-point advantage over dialogue alone. Its paired interval was wide
+and the exact McNemar comparison was not significant. A full replay then found that the test harness had compared equivalent
+sequence values incorrectly. Nineteen of 48 execution records changed:
+12 evidence labels and five criterion labels changed, one further criterion record changed its test counts while remaining
+unsuccessful, and one missing criterion was reclassified from sandbox error to invalid submission. Thus, 17 binary labels
+changed. The count of 19 also includes a test-count change and a failure-status correction.
+
+The corrected 95\% paired case-bootstrap interval was 0.00 to 13.04 percentage points, and the two-sided exact McNemar
+test gave $p=1.0$. Only one case had different correctness outcomes between the conditions: evidence corrected that prediction,
+while 18 cases were correct under both conditions and four were incorrect under both. The original exact comparison gave
+$p=0.0923$. Neither result establishes equivalence. In particular, the corrected interval still includes the declared
+ten-percentage-point threshold for a practically meaningful improvement, although the point estimate falls below it.
+The experiment therefore leaves a meaningful benefit unresolved. It cannot show that probing has no useful effect.
+These intervals describe resampling this small authored corpus and do not account for its shared concept families or a fresh
+model run. Figure~\ref{fig:harness-correction} shows how the correction changed the estimated advantage and its interval.
+
+Here, performance means passing the authored criterion checks. Repairing the sequence comparison did not establish that those
+checks covered every task requirement. The worked example retains a known coverage limitation: checking returned values did not
+establish that the supplied list was changed. The corrected analysis remains a comparison against this limited instrument.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{assets/figures/ch06-evaluation/harness_correction_result.pdf}
+  \caption{Effect of correcting the test harness on 23 eligible authored cases. Adding executable evidence to the dialogue
+  increased correct predictions from 13/23 to 20/23 under the original scoring, and from 18/23 to 19/23 after correction.
+  The corrected reduction in classification error was 4.3 percentage points (95\% paired bootstrap interval: 0 to 13.0).
+  Positive differences favour adding evidence. Related and unrelated passing checks produced identical predictions.
+  The correction reuses one recorded model run. It does not measure learning.}
+  \label{fig:harness-correction}
+\end{figure}
+

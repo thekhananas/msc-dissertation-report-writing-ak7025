@@ -193,10 +193,31 @@ pairs. The word exact does not remove the authored-case dependence or sampling l
 not establish equivalence. The corrected study has only one discordant pair, which limits what this test can distinguish.
 
 The exact conditional test controls its nominal false-positive rate under its assumptions, at the cost of conservatism.
+\textcite{fagerland2013mcnemar} found poor power relative to several alternatives and recommended against this test.
+That criticism applies to the choice made here. The frozen procedure is retained to avoid selecting a more favourable test
+after seeing outcomes. Its limited power remains a weakness. A future study should justify its test and sample size
+together before collecting results.
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{assets/figures/ch03-measurement/external_study_design.pdf}
-  \caption{External-model benchmark design. Cases combine authored problems, reference solutions, and learner-model prompts under CriterionGate.}
-  \label{fig:external-study-design}
-\end{figure}
+The discreteness is visible directly from the formula. Even if all $m=b+c$ discordant pairs favour one condition, the smallest
+two-sided value is $2^{1-m}$ for $m\geq1$. Five such pairs give 0.0625. Six give 0.03125. Six is therefore a necessary minimum
+number of discordant pairs for significance at 0.05 under this test, not an adequate sample-size recommendation. Merely adding
+cases on which both conditions agree cannot resolve this limitation.
+
+The within-case sign-swap calculation is secondary. It reverses the sign of each saved case difference independently,
+compares absolute mean differences, and uses 10,000 random sign assignments for the 23-case analysis. Assignments are drawn
+with replacement, allowing repeated assignments. If $B$ simulated absolute means are at least as large as the observed
+absolute mean, the reported value is $(B+1)/(10{,}000+1)$. The comparison uses a numerical tolerance of $10^{-12}$.
+\Textcite{phipson2010permutation} explain why randomly sampled permutations should not produce an artificial zero p-value
+and distinguish this conservative calculation from exhaustive enumeration. The added one is part of the calculation,
+not an additional observed case.
+
+The calculation assumes that reversing each paired difference is valid under the null. It does not turn the observational
+model responses into a randomised tutoring intervention, and the added-one rule cannot establish that assumption or remove
+dependence between cases. The secondary value is therefore not an alternative route to declaring the primary comparison
+successful. In the corrected primary contrast, one case has effect $+1$ and the other 22 have effect zero. Every sign
+assignment has the same absolute mean, so the reported sign-swap value of one follows directly, without needing more draws.
+
+The frozen hierarchy also treats threshold and update-size sensitivity, subgroup summaries and leave-one-concept-out checks
+as secondary. These can expose fragile conclusions. They do not supply new confirmatory claims. One generation per case and
+channel leaves between-run model variability unestimated. The complete harness correction reuses this hierarchy and the
+saved responses, while remaining explicitly post-hoc.
