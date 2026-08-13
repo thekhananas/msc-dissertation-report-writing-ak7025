@@ -15,7 +15,7 @@ unsuccessful, and one missing criterion was reclassified from sandbox error to i
 changed. The count of 19 also includes a test-count change and a failure-status correction.
 
 The corrected 95\% paired case-bootstrap interval was 0.00 to 13.04 percentage points, and the two-sided exact McNemar
-test gave $p=1.0$ (two-sided exact). Only one case had different correctness outcomes between the conditions: evidence corrected that prediction,
+test gave $p=1.0$. Only one case had different correctness outcomes between the conditions: evidence corrected that prediction,
 while 18 cases were correct under both conditions and four were incorrect under both. The original exact comparison gave
 $p=0.0923$. Neither result establishes equivalence. In particular, the corrected interval still includes the declared
 ten-percentage-point threshold for a practically meaningful improvement, although the point estimate falls below it.
@@ -37,4 +37,49 @@ establish that the supplied list was changed. The corrected analysis remains a c
   The correction reuses one recorded model run. It does not measure learning.}
   \label{fig:harness-correction}
 \end{figure}
+
+\subsection{The Missing Criterion Outcome}
+
+Case \texttt{h-c2m2-03} has no valid binary criterion outcome. The original execution was recorded as a sandbox error.
+The corrected replay records an invalid submission. Neither status is an observed test failure, so the case remains excluded
+from the 23-case primary analysis.
+
+Its saved dialogue-only and valid-evidence predictions both indicate success. If a valid criterion outcome had been failure,
+both would be wrong. If it had been success, both would be right. Holding the saved predictions and all other outcomes fixed,
+the two hypothetical completions give 18/24 versus 19/24 correct predictions, or 19/24 versus 20/24. In either case, the
+valid-evidence advantage would be $1/24$, or 4.17 percentage points. The missing case cannot add a disagreement between these
+two conditions under either binary completion. Their observed advantage remains $1/23$, or 4.35 points.
+
+This is a descriptive sensitivity calculation, not an imputed observation or a new primary analysis. It does not justify
+treating invalid submissions as failures, assuming that missingness is random, or extending the finding beyond the authored
+cases. The corrupted-evidence prediction for this case is failure, so the same cancellation does not apply to every secondary
+comparison. The small corpus, shared concepts and single model run remain separate limitations.
+
+For the secondary comparisons, valid and unrelated evidence have identical predictions on all 24 cases, including the missing
+case. Their difference therefore remains zero under either binary completion. Valid evidence exceeds corrupted evidence by a
+net 15 correct predictions among the 23 observed cases. Adding a hypothetical failure for the missing case reduces that net
+difference to 14. Adding a success increases it to 16. Across 24 cases, these alternatives give advantages of 58.33 and
+66.67 percentage points, respectively (the observed 23-case difference is 65.22 points).
+
+The frozen combined control contrast averages the valid-versus-unrelated and valid-versus-corrupted differences. Its observed
+value is 32.61 percentage points. The two hypothetical completions give 29.17 and 33.33 points. These describe alternative
+completions of the missing outcome. The positive combined contrast comes entirely from the corrupted-evidence comparison.
+It cannot establish that relevant evidence helps more than unrelated evidence. No secondary outcome is filled in, and the
+frozen analyses retain their original 23-case denominator.
+
+\subsection{Reviewer Agreement and Its Limits}
+
+The two public-answer reviewers agreed on all 24 cases. Both assigned 23 answers to the correct category and one to the
+conflicting category. No disagreement required adjudication. Raw agreement and unweighted Cohen's kappa were both 1.0.
+These ratings concern the visible answers, not the later criterion outcomes. With four of the six categories unused, this
+sample provides little evidence about how consistently the reviewers would distinguish the full category set.
+
+The separate failure review covered six records, assessed by the author and an independent reviewer. Both final submissions assigned four to item ambiguity or test defect and
+two to no observed failure. Raw agreement and kappa were again 1.0, with no adjudication required. These six records are a
+selected diagnostic set, not a random sample of all possible failures. Their category counts cannot estimate a general failure
+rate or establish that every relevant defect was found.
+
+The archived author sheet contains an earlier version with three different categories. The agreement calculation uses the
+revised author sheet and the final independent submission. It therefore describes agreement after revision. It does not
+establish agreement between initial judgements or show whether the revision process affected their convergence.
 
