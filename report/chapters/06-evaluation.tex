@@ -11,7 +11,7 @@ The original sealed analysis suggested a 30.43 percentage-point advantage over d
 and the exact McNemar comparison was not significant. A full replay then found that the test harness had compared equivalent
 sequence values incorrectly. Nineteen of 48 execution records changed:
 12 evidence labels and five criterion labels changed, one further criterion record changed its test counts while remaining
-unsuccessful, and one missing criterion was reclassified from sandbox error to invalid submission. Thus, 17 binary labels
+unsuccessful, and one missing criterion was reclassified from sandbox execution error to invalid submission. Thus, 17 binary labels
 changed. The count of 19 also includes a test-count change and a failure-status correction.
 
 The corrected 95\% paired case-bootstrap interval was 0.00 to 13.04 percentage points, and the two-sided exact McNemar
@@ -40,7 +40,7 @@ establish that the supplied list was changed. The corrected analysis remains a c
 
 \subsection{The Missing Criterion Outcome}
 
-Case \texttt{h-c2m2-03} has no valid binary criterion outcome. The original execution was recorded as a sandbox error.
+Case \texttt{h-c2m2-03} has no valid binary criterion outcome. The original execution was recorded as a sandbox execution error.
 The corrected replay records an invalid submission. Neither status is an observed test failure, so the case remains excluded
 from the 23-case primary analysis.
 
