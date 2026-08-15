@@ -11,7 +11,7 @@ The original sealed analysis suggested a 30.43 percentage-point advantage over d
 and the exact McNemar comparison was not significant. A full replay then found that the test harness had compared equivalent
 sequence values incorrectly. Nineteen of 48 execution records changed:
 12 evidence labels and five criterion labels changed, one further criterion record changed its test counts while remaining
-unsuccessful, and one missing criterion was reclassified from sandbox execution error to invalid submission. Thus, 17 binary labels
+unsuccessful, and one missing criterion was reclassified from sandbox error to invalid submission. Thus, 17 binary labels
 changed. The count of 19 also includes a test-count change and a failure-status correction.
 
 The corrected 95\% paired case-bootstrap interval was 0.00 to 13.04 percentage points, and the two-sided exact McNemar
@@ -40,7 +40,7 @@ establish that the supplied list was changed. The corrected analysis remains a c
 
 \subsection{The Missing Criterion Outcome}
 
-Case \texttt{h-c2m2-03} has no valid binary criterion outcome. The original execution was recorded as a sandbox execution error.
+Case \texttt{h-c2m2-03} has no valid binary criterion outcome. The original execution was recorded as a sandbox error.
 The corrected replay records an invalid submission. Neither status is an observed test failure, so the case remains excluded
 from the 23-case primary analysis.
 
@@ -83,3 +83,48 @@ The archived author sheet contains an earlier version with three different categ
 revised author sheet and the final independent submission. It therefore describes agreement after revision. It does not
 establish agreement between initial judgements or show whether the revision process affected their convergence.
 
+Agreement shows that the submitted categories matched. It does not prove that they were correct, that test coverage was complete,
+or that the chosen category identifies a unique cause. A shared taxonomy can encourage a shared interpretation. The reliability
+reports summarise final submissions. Preserved review records are needed to inspect their revision
+history. The complete harness correction remains separate execution evidence and must not be inferred from agreement alone.
+
+\subsection{Recorded Workload and Missing Measurements}
+
+The original external run recorded 72 Cerebras responses: 48 across the public-answer and evidence channels, followed by
+24 criterion responses. Their total usage was 15,899 input tokens and 16,684 output tokens. Summed provider latency was
+32.70 seconds. This is the sum of individual recorded request latencies, not elapsed experiment time or the waiting time of a
+student using the tutor. Response-capture spans were about 633 seconds for decision generation and 364 seconds for criterion
+generation, in separate phases.
+
+Of 48 original sandbox execution attempts, 47 completed: all 24 evidence executions and 23 of 24 criterion executions.
+The missing criterion left 23 cases eligible for paired analysis. Completion is distinct from passing a test. Subsequent
+harness correction reused recorded model responses. It did not constitute another independent model evaluation.
+
+Provider charges were not reported. Sandbox duration, CPU use and memory use were also absent from the original records.
+These quantities remain unavailable, rather than being treated as zero. The original reconciliation report also predates the
+complete harness correction. Its partial corrected pass/fail tallies are superseded. Only its original workload accounting is
+used here.
+
+An evidence-informed condition required the public response plus an additional model response and sandbox execution. Criterion
+generation was an evaluation requirement, not an input available to a deployed prediction rule. This accounting establishes
+extra experimental work, but not realised financial savings, a minimum-cost selection policy, or faster classroom tutoring.
+The probe selection simulator performs no provider or sandbox call, and its probe allocation cannot fill these missing cost measurements.
+
+\FloatBarrier
+\section{Bounded Update Study}
+
+Across five adverse simulator conditions, the bounded tracker had mean Brier error 0.0094 lower than ordinary channel-aware Bayes.
+The paired 95\% interval was $[-0.0101,-0.0086]$. Under clean evidence, bounding increased Brier error by 0.0033, and the upper
+interval bound of 0.0042 remained below the fixed 0.0100 tolerance. Figure~\ref{fig:tracker-result} shows the comparison
+across the tested conditions.
+
+The favourable adverse-condition average hides differences between conditions. Bounded updating reduced Brier error under
+uninformative, inverted and reliability-misspecified evidence, but increased it under missing and contradictory evidence.
+It passed the declared rule for average improvement and the permitted loss under clean evidence. This is
+an empirical result, separate from the per-observation bound on log-odds movement.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{assets/figures/ch06-evaluation/tracker_study_canonical.pdf}
+  \caption{Ordinary and bounded Bayesian updates across 500 matched simulated episodes per condition. Lower Brier error
+  indicates better probability predictions. Differences are bounded minus ordinary. Negative values favour bounded updating.
