@@ -168,3 +168,63 @@ $0.719995$. Table~\ref{tab:acquisition-counterexample} shows the resulting decis
   \end{tabular}
   \caption{A counterexample using the frozen clipping bound. The belief changes after either possible check result, but the
   predicted class remains success. The check therefore cannot reduce classification error for this case under the stated model.}
+  \label{tab:acquisition-counterexample}
+\end{table}
+
+The probability of a pass is $0.86$ and the probability of a failure is $0.14$. The implemented calculation gives
+
+\begin{equation}
+  0.05-\left[0.86R(0.992927)+0.14R(0.719995)\right]=0.004717.
+\end{equation}
+
+Both branches still predict success, so the actual expected classification error remains $P(Y=0)=0.05$ and its reduction is
+zero. A pass moves the belief farther from the threshold, while a failure moves it closer. Weighted by their probabilities,
+the risk expression evaluated at those modified beliefs falls below its starting value. The predicted class stays the same
+in both branches. This counterexample was found during review after the experiment, using the original clipping bound.
+It does not measure how often the issue affected the study's rankings, and is not attributed to the decision-theory reference.
+
+There is a second distinction. Ranking calculates hypothetical updates using each sampled reliability setting. Execution always
+updates using the calibration posterior means. The ranking score therefore does not integrate the expected loss of the exact
+procedure subsequently executed.
+
+To make the distinction precise, let $\bar\theta$ be the calibration means and
+$a_{\bar\theta}(z)=\mathbf{1}\{T_\kappa(p,z;\bar\theta)\geq 0.5\}$. Under generating channel $\theta$, this fixed decision
+procedure has expected loss
+\begin{equation}
+ L_\theta(a_{\bar\theta})=
+ \sum_{y\in\{0,1\}}\sum_z P_\theta(Y=y,Z=z\mid p)
+ \mathbf{1}\{a_{\bar\theta}(z)\ne y\}.
+\end{equation}
+Missing observations, where permitted, leave the starting belief unchanged and consume the probe allocation. They must be
+included in this sum. The actual expected reduction is $R(p)-L_\theta(a_{\bar\theta})$, assuming the stated joint model.
+This is an application of expected-loss evaluation, not a new decision-theory result
+\parencite[Section~5.7]{murphy2012machine}. It explains the limitation. It was not substituted into the frozen experiment after
+its results were known. The fixed clipped rule can increase expected loss, whereas a Bayes-optimal decision with the option to
+ignore an observation cannot do worse in expectation under its own coherent model. That distinction does not provide protection
+when the assumed model is wrong.
+
+A decision-aligned calculation would therefore follow four steps for each case:
+
+\begin{enumerate}
+  \item Record the classification and expected error before requesting a check.
+  \item Enumerate every possible check result, including a missing result where the environment permits one.
+  \item Apply the same update and threshold that evaluation will execute. Calculate whether that decision is wrong under
+  each possible true outcome.
+  \item Average those errors under the stated joint model and subtract the result from the error before the check.
+\end{enumerate}
+
+The frozen policy does not implement these four steps as one coherent calculation. They specify the correction required before
+a future selector can be described as choosing probes by expected classification-error reduction.
+
+The batch objective introduces a further limitation. With equal probe costs and exactly $k$ selections, taking the largest
+$s_i$ maximises the sum of the selected scores. It does not generally maximise a lower quantile of their combined benefit.
+For uncertain quantities $X_i$, quantiles do not generally add:
+\begin{equation}
+ Q_{0.10}\!\left(\sum_{i\in S}X_i\right)
+ \ne \sum_{i\in S}Q_{0.10}(X_i)
+ \quad\text{in general}.
+\end{equation}
+Here $S$ is a selected set. Shared uncertainty about channel reliability affects its joint outcome. Even independent quantities
+need not satisfy equality. For example, let two independent quantities each equal zero with probability $0.06$ and one otherwise.
+Each has lower tenth quantile one, but their sum has lower tenth quantile one, rather than two: the probability of a sum at most
+one is $1-0.94^2=0.1164$. This mathematical example is separate from the simulator results.
