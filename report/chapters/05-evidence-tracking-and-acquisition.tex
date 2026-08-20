@@ -108,7 +108,7 @@ comparison holds the channel model fixed. Even there, trust weighting and clippi
 
 Each simulated episode in the probe selection study contains 40 cases. Every ordinary policy sees the same prior estimates and permitted features, then
 selects exactly 20 probes before any selected outcome is revealed. The allocation is compulsory, and every selected probe has
-the same fixed unit cost. Random selection,
+the same unit cost. Random selection,
 uncertainty-only selection, a plug-in clipped-belief comparator, and the reliability-aware clipped-belief heuristic all spend
 the full allocation. Zero or negative scores do not stop selection. Never-probe and always-probe define endpoints. This is
 one-step batch selection, without conversational adaptation.
@@ -228,3 +228,83 @@ Here $S$ is a selected set. Shared uncertainty about channel reliability affects
 need not satisfy equality. For example, let two independent quantities each equal zero with probability $0.06$ and one otherwise.
 Each has lower tenth quantile one, but their sum has lower tenth quantile one, rather than two: the probability of a sum at most
 one is $1-0.94^2=0.1164$. This mathematical example is separate from the simulator results.
+
+Consequently, cautious individual rankings provide no established lower-quantile guarantee for the batch's total benefit.
+Correcting the individual expected-loss calculation would still leave that distinction to address. The frozen study evaluates
+the ranking rule as implemented. Optimal selection under joint reliability uncertainty remains unestablished.
+
+The reference labelled \texttt{oracle} uses true channel rates but retains the assumed update and clipped-belief risk score.
+It is a true-channel reference, not an optimal accuracy bound. Historical policy identifiers remain unchanged for reproduction.
+The final evaluation measures classification errors against generated outcomes separately from the acquisition score. Those
+measurements describe the implemented heuristic, not a correctly integrated value-of-information optimiser.
+
+\subsection{How the Equations Are Implemented}
+
+Table~\ref{tab:acquisition-implementation} maps each calculation to its code. Paths start at
+\path{development/src/socratic_tutor/acquisition_study/}.
+\begin{table}[htbp]
+ \centering
+ \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}X@{}}
+ \toprule
+ Quantity & Implementation and interpretation \\
+ \midrule
+ Ranking score & \path{policies.py}: \texttt{reliability\_aware\_evsi\_scores} is the historical function name. It computes a lower quantile of changes in clipped-belief risk. \\
+ Executed update & \path{evaluation.py}: selected observations update using calibration means, without reranking. \\
+ Measured error & \path{evaluation.py}: final thresholded prediction compared with \texttt{latent\_success}. \\
+ Primary interval & \path{primary_analysis.py}: paired episode resampling with a fixed calibration fit. \\
+ \bottomrule
+ \end{tabularx}
+ \caption{Where the probe selection calculations are implemented. The ranking score uses a risk expression evaluated at modified
+ beliefs. Measured error counts incorrect final predictions. A higher ranking score need not produce fewer errors.}
+ \label{tab:acquisition-implementation}
+\end{table}
+
+\subsection{Failure Settings and Their Limits}
+
+\Cref{tab:acquisition-faults} describes the seven stress tests in \path{v1-environments.yaml}.
+For sensitivity or specificity $r$, scaling by $s$ gives $0.5+s(r-0.5)$ before inversion.
+
+\begin{table}[htbp]
+ \centering
+ \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X@{}}
+ \toprule
+ Setting & Constructed change and purpose \\
+ \midrule
+ Matched & Uses the calibration-generating channel rates to check behaviour when the assumed channel family is appropriate. Finite calibration samples still introduce estimation error. \\
+ Lower reliability & Scales both rates' distance from chance by 0.5 to test overconfidence in channel quality. \\
+ Asymmetric errors & Scales sensitivity's distance from chance by 0.2 and leaves specificity unchanged to test excess false negatives. \\
+ Irrelevant evidence & Sets sensitivity and specificity to 0.5 to test evidence carrying no information about the target. \\
+ Inverted evidence & Reverses every sampled result to test a fully reversed observation channel. \\
+ Missing results & Missing probability is $0.05+0.55(1-2|p-0.5|)$, capped at 0.60. Lost observations concentrate near uncertain priors. \\
+ Family failures & Reverses all four outcomes in a family together with probability 0.30 to test shared corruption. \\
+ \bottomrule
+ \end{tabularx}
+ \caption{Authored acquisition stress settings. The probabilities were chosen to specify controlled experiments. Their values
+ do not estimate the frequency of software faults or learner behaviour.}
+ \label{tab:acquisition-faults}
+\end{table}
+
+The v1 evaluation motivates checking evidence quality, but its observed defects do not establish these probabilities or validate
+each mechanism. In particular, full inversion is a deliberately severe control. The missingness variable is proximity to prior
+probability one half, not an observed measure of student difficulty.
+
+The broader concern about acquisition under wrong model assumptions is supported by existing work. For example,
+\textcite{tang2026robust} analyse error amplification under model misspecification and propose an acquisition criterion that
+accounts for it. That work provides related theoretical context. This study does not implement its criterion or transfer its
+guarantees to clipped-belief selection.
+
+The matched setting is a project-authored implementation check. Lower reliability and
+asymmetric errors are project-authored parameter shifts. Irrelevance and full inversion are project-authored contrastive controls.
+Missingness and family corruption are project-authored structural stress conditions. Their immediate specification source is the
+frozen configuration, and their purpose is stated in \cref{tab:acquisition-faults}. Neither the cited literature nor v1 supplies
+their numerical rates. This distinction avoids presenting plausible failure stories as observed educational data.
+
+Family corruption changes marginal reliability as well as dependence: a base rate $r$ becomes $0.3+0.4r$ after random family
+inversion. Without an independent-corruption condition at the same marginal rates, that setting cannot isolate the causal effect
+of correlation alone. Its result concerns the combined failure mechanism. No additional control was added after viewing results.
+
+\subsection{Comparison and Uncertainty}
+
+Development checks used 50 episodes per environment. The final comparison used 2,000. The frozen plan permitted one final
+evaluation and exact retries, while prohibiting parameter selection from evaluation outcomes or use of those outcomes to
+update reliability. Its software-failure rule required invalidating the affected run, fixing the version and rerunning.
