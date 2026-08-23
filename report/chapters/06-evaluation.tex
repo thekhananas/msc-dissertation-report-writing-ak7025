@@ -128,3 +128,93 @@ an empirical result, separate from the per-observation bound on log-odds movemen
   \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{assets/figures/ch06-evaluation/tracker_study_canonical.pdf}
   \caption{Ordinary and bounded Bayesian updates across 500 matched simulated episodes per condition. Lower Brier error
   indicates better probability predictions. Differences are bounded minus ordinary. Negative values favour bounded updating.
+  Paired 95\% intervals describe the equally weighted average across five adverse conditions and the clean condition.
+  Bounded updating improved the adverse average, while error increased under missing, contradictory and clean evidence.
+  The results concern the specified simulator. They do not measure student learning.}
+  \label{fig:tracker-result}
+\end{figure}
+
+\FloatBarrier
+\section{Selective Acquisition Study}
+\suppressfloats[t]
+
+At the fixed 50\% budget, the proposed policy reduced held-out classification error by 1.19 percentage points relative to random
+selection. It increased error by 0.855 percentage points (0.86 when rounded to two decimal places) relative to uncertainty-only
+selection and by 0.54 points relative to the plug-in
+clipped-belief comparator. All three multiplicity-adjusted intervals excluded zero. The proposed policy therefore failed the declared
+all-comparator rule.
+
+The budget was compulsory: every selector that could probe selected 20 of the 40 cases. The candidate therefore chose the
+allocation, rather than deciding whether an additional check was worth requesting in the first place. The comparison
+concerns which cases were checked under this fixed design. Every selector requested the same number of checks.
+
+These are measured errors of the implemented heuristics. As Chapter~\ref{ch:method} explains, the acquisition score is not
+generally expected classification-error reduction. The result therefore cannot establish the performance of an exact
+value-of-information optimiser. The counterexample identifies a limitation. It does not quantify its contribution to the
+observed ranking differences.
+
+The intervals are conditional on the frozen calibration fit and refer to the equally weighted six-environment comparison.
+They do not include calibration-sample variability or establish safety in every environment. Starting probabilities were
+calibrated by construction, and each policy selected its entire allocation before seeing probe outcomes.
+
+The plan divides the 5\% error allowance among three primary comparisons, giving each a nominal
+$1-0.05/3=98.33\%$ interval. This targets at least 95\% joint coverage if each interval achieves its stated coverage. It does
+not mean that the set has 98.33\% joint coverage. The adjustment does not require independent comparisons, but it cannot
+repair inaccurate marginal bootstrap coverage or include variation omitted by the resampling procedure.
+
+\Cref{tab:m7b-primary-comparison} reports the frozen primary comparison using the corrected method names. The plug-in
+comparator uses mean reliability in the same clipped-belief scoring rule. Ordinary expected-loss selection remains untested.
+
+% Values checked against canonical_primary_analysis_report.json, hash
+% edec72e5a8764d4df5e52c5c09a1de213efeb3e22d4c5972708ec441e70a9d34.
+\begin{table}[htbp]
+  \centering
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrr@{}}
+    \toprule
+    Comparator & Error (\%) & \shortstack{Difference [interval]\\(percentage points)} \\
+    \midrule
+    Random selection & 34.45 & $-1.19\;[-1.33,-1.05]$ \\
+    Highest uncertainty & 32.41 & $+0.86\;[+0.76,+0.95]$ \\
+    Plug-in clipped-belief rule & 32.72 & $+0.54\;[+0.48,+0.60]$ \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Primary prediction errors at the fixed 50\% probe allocation, averaged equally across six held-out simulated
+  settings (2,000 paired episodes per setting). The candidate's error was 33.26\%. Differences are candidate minus comparator.
+  Negative values favour the candidate. The planned 98.33\% intervals adjust for three comparisons and hold calibration fixed.}
+  \label{tab:m7b-primary-comparison}
+\end{table}
+
+For the proposed policy, matched-setting error fell from 31.23\% with no probes to 14.54\% when every case was probed. Across the
+six held-out settings, the equally weighted error rose from 31.23\% to 37.66\%. Irrelevant and inverted evidence produced the
+largest harm. This descriptive budget analysis shows why success under the policy's own assumptions was insufficient.
+At the full allocation, selection no longer distinguishes the ordinary policies: every case is probed and the same bounded
+update is applied. Harm at this endpoint concerns evidence updating under the declared faults, rather than the ranking alone.
+The equal-weight average is not an estimate of how often those faults occur in deployed systems.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    Setting & No probes (\%) & Full probing (\%) & Change (points) \\
+    \midrule
+    Matched & 31.23 & 14.54 & $-16.69$ \\
+    Lower reliability & 31.15 & 29.08 & $-2.07$ \\
+    Asymmetric errors & 31.16 & 27.33 & $-3.83$ \\
+    Irrelevant evidence & 31.52 & 43.14 & $+11.62$ \\
+    Inverted evidence & 31.17 & 71.89 & $+40.73$ \\
+    Missing results & 31.18 & 22.71 & $-8.47$ \\
+    Family failures & 31.18 & 31.84 & $+0.66$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Descriptive endpoint errors from the frozen secondary budget analysis, with 2,000 episodes per setting.
+  Lower error is better. Changes are calculated before rounding, so displayed endpoint subtraction may differ by 0.01 points.
+  The endpoints use identical updating across ordinary selectors. This table does not compare their ranking quality.}
+  \label{tab:acquisition-endpoints}
+\end{table}
+
+\Cref{tab:acquisition-endpoints} shows why the held-out average needs its individual settings. Lower reliability, asymmetric
+errors and missing results retained improvements at full probing. Irrelevance, inversion and family corruption worsened error.
+The inverted setting had the highest full-budget error, 71.89\%, under deliberately complete reversal of the observation channel.
+These endpoint differences are descriptive, without new significance claims or thresholds. Family corruption changes marginal
+reliability as well as dependence, so its difference cannot be attributed to correlation alone.
+
