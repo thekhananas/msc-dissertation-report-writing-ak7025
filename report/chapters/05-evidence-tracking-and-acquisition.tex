@@ -308,4 +308,38 @@ of correlation alone. Its result concerns the combined failure mechanism. No add
 Development checks used 50 episodes per environment. The final comparison used 2,000. The frozen plan permitted one final
 evaluation and exact retries, while prohibiting parameter selection from evaluation outcomes or use of those outcomes to
 update reliability. Its software-failure rule required invalidating the affected run, fixing the version and rerunning.
-% Note: Random probe allocation baseline serves as essential uncalibrated anchor
+Development ablations and calibration sensitivity remain diagnostic analyses, with their own records and denominators.
+
+The acquisition extension had a planned 40-hour technical limit to protect time for writing and verification. This records
+the intended scope. The retained experiment reports do not independently establish the total working hours spent. The later
+mathematical review corrected interpretation of the saved results without replacing the evaluated method.
+
+A proposed replay of the acquisition policies over the external-model benchmark was dropped. Those records did not contain
+the corresponding reliability inputs available before the outcomes were known. Constructing them retrospectively would make
+the comparison depend on choices informed by those outcomes. The external benchmark therefore motivates the acquisition
+study. It does not provide an external validation of the selector. Replaying saved benchmark responses to check the original
+scoring remains a separate operation.
+
+Before the final simulator run, a reviewer with self-described machine-learning experience assessed the design packet and
+environment descriptions. The disposition records 6 September 2026. The reviewer reported working independently, without
+seeing development outcomes or policy rankings, and recommended proceeding unchanged. They nevertheless marked uncertainty
+about omitted failure types, inference of the hidden environment and the episode as an independent unit. These reservations
+remain limitations. The recommendation does not resolve them or validate the simulator as a model of learners.
+
+The packet and response were not committed separately, so Git history alone cannot establish their order. The retained
+response and disposition document the reported process. Information isolation applies to the fixed, inspected policies.
+Arbitrary code can still read local files. Episodes are the resampling unit because failures
+may be shared within their case families, while separate episodes use independent random draws. This is an assumption of
+the simulation design, rather than an empirical finding from the review.
+
+The primary comparison equally weights six specified mismatch environments, with 2,000 episodes per environment.
+Pairing is preserved within each environment. The three primary comparisons use Bonferroni-adjusted percentile-bootstrap
+intervals from 20,000 draws. These intervals are conditional on the frozen calibration fit. They do not include variability
+from collecting another calibration sample. The separate 20-seed development sensitivity analysis does not change that scope.
+
+The success rule requires favourable aggregate intervals against all three comparators and no adverse per-environment point
+estimate against the plug-in comparator. This is the prespecified study criterion. A point estimate cannot rule out meaningful
+harm, so the rule is not a per-environment safety guarantee. Equal weighting describes the chosen stress-test mixture, not
+deployment prevalence. The candidate failed this rule. The threshold and comparators remained fixed.
+
+\section{Prediction from Historical Learner Records}
