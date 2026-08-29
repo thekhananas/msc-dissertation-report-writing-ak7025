@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Primary comparison at the fixed 50\% executable-probe budget across six held-out simulated settings. The proposed selector's error was 33.26\%.}
+\label{tab:m7b-primary-comparison}
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+Comparator & Error (\%) & \shortstack{Difference [98.3\% interval]\\(percentage points)} & Proposed \\
+\midrule
+Random selection & 34.45 & -1.19 [-1.33, -1.05] & Lower \\
+Highest uncertainty & 32.41 & +0.86 [+0.76, +0.95] & Higher \\
+Plug-in clipped-belief rule & 32.72 & +0.54 [+0.48, +0.60] & Higher \\
+\bottomrule
+\end{tabular}
+\vspace{0.4em}
+\begin{minipage}{0.98\linewidth}
+\footnotesize Difference is proposed minus comparator classification error, so negative values favour the proposed selector. The six settings receive equal weight, with 2,000 paired episodes per setting. The planned 98.3\% intervals account for the three primary comparisons. Intervals hold the calibration fit fixed. These hand-specified simulations do not measure human learning.
+\end{minipage}
+\end{table}

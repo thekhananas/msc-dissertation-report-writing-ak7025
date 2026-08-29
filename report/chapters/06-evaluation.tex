@@ -17,7 +17,7 @@ changed. The count of 19 also includes a test-count change and a failure-status 
 The corrected 95\% paired case-bootstrap interval was 0.00 to 13.04 percentage points, and the two-sided exact McNemar
 test gave $p=1.0$. Only one case had different correctness outcomes between the conditions: evidence corrected that prediction,
 while 18 cases were correct under both conditions and four were incorrect under both. The original exact comparison gave
-$p=0.0923$. Neither comparison establishes equivalence. In particular, the corrected interval still includes the declared
+$p=0.0923$. Neither result establishes equivalence. In particular, the corrected interval still includes the declared
 ten-percentage-point threshold for a practically meaningful improvement, although the point estimate falls below it.
 The experiment therefore leaves a meaningful benefit unresolved. It cannot show that probing has no useful effect.
 These intervals describe resampling this small authored corpus and do not account for its shared concept families or a fresh
@@ -218,3 +218,73 @@ The inverted setting had the highest full-budget error, 71.89\%, under deliberat
 These endpoint differences are descriptive, without new significance claims or thresholds. Family corruption changes marginal
 reliability as well as dependence, so its difference cannot be attributed to correlation alone.
 
+\subsection{Where the Fixed-Budget Selector Lost}
+
+At the primary 50\% allocation, the candidate's mean error exceeded both informed comparators in all seven environments,
+including the matched check. In that matched setting, its error was 19.18\%, compared with 18.12\% for uncertainty-only
+selection and 18.38\% for the plug-in clipped-belief rule. Thus, a channel model matching the calibration-generating process
+was not sufficient for the candidate to lead these comparisons.
+
+Among held-out settings, asymmetric errors produced the largest candidate disadvantage against uncertainty-only selection
+($+1.10$ percentage points) and the plug-in rule ($+0.80$ points). Inverted evidence produced the highest candidate error at
+50\%, 53.80\%, and the only setting in which its point estimate was worse than random selection ($+2.19$ points).
+The candidate therefore beat random on the held-out average while still losing to it under full inversion.
+
+These values come from the frozen primary per-environment effect table. They describe the location of the losses. The
+simultaneous inferential comparisons concern the held-out aggregate reported above. The fact that each point estimate favours
+an informed comparator is not a separate claim of statistical significance for every environment. Nor does this breakdown
+identify which component of the candidate caused its disadvantage.
+
+\subsection{Development-Only Component Comparison}
+
+The frozen development ablation compared four combinations of reliability scoring and updating. Each used 20 probes per episode,
+with 50 episodes in each of the six held-out settings. These results are diagnostic and were not used to select the canonical
+method. Table~\ref{tab:acquisition-ablation} reports the four combinations. They must not be pooled with the 2,000-episode
+canonical comparisons.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    Reliability used for ranking & Bounded update & Unbounded update \\
+    \midrule
+    Lower-quantile score & 33.30\% & 33.40\% \\
+    Plug-in mean reliability & 32.95\% & 33.07\% \\
+    \bottomrule
+  \end{tabular}
+  \caption{Mean classification error from 50 development episodes in each of six simulated failure settings, with 20 probes
+  per 40-case episode. Settings receive equal weight. Lower values are better. These are descriptive development results.
+  Clipping is applied or removed in both hypothetical scoring updates and executed updates. Consequently this comparison does
+  not isolate its effect on ranking from its effect on the final belief.}
+  \label{tab:acquisition-ablation}
+\end{table}
+
+With lower-quantile scoring, clipping reduced mean error by 0.10 percentage points. With mean-reliability scoring, it reduced
+error by approximately 0.12 points. The difference between these effects was $+0.017$ points, calculated before rounding.
+This small descriptive interaction provides no clear evidence that the two components worked especially well together.
+Replacing lower-quantile scoring with the plug-in rule reduced error by 0.35 points when bounded and 0.33 points when unbounded.
+No inferential interaction claim follows from this development report.
+
+The comparison preserves the implementation's score definitions. In particular, the plug-in row evaluates the score at mean
+reliability. It does not average scores over the reliability posterior. These ablations help locate differences between the
+implemented variants, without establishing a general result about conservative acquisition or Bayesian decision theory.
+
+\subsection{Development Sensitivity and Reliability Control}
+
+The separate calibration sensitivity used 20 prespecified calibration seeds while retaining the development evaluation design.
+The candidate's held-out error estimate was lower than random selection for all 20 seeds, lower than uncertainty-only selection
+for none, and lower than the plug-in comparator for one. No seed satisfied the complete robustness pattern. Candidate-minus-
+comparator differences ranged from $-2.24$ to $-0.74$ percentage points against random, $+0.09$ to $+0.89$ against uncertainty,
+and $-0.03$ to $+0.55$ against the plug-in rule. These ranges describe the specified seeds, not confidence intervals or a
+distribution over all possible calibration datasets. They did not select the canonical calibration fit.
+
+The reliability control used one frozen reassignment of reliability summaries between probe classes during ranking. Both
+selectors faced the same development episodes. Executed updates retained each selected case's original calibrated reliability.
+Across 50 episodes per held-out setting, candidate mean error was 33.30\%, compared with 33.37\% under the reassignment.
+The difference was approximately $-0.067$ percentage points. The candidate was worse under inversion by 1.20 points, despite
+the small average advantage.
+
+This control checks the effect of that particular mismatch between ranking inputs and case identity. It is not a test over all
+permutations, a probability that reliability information is useful, or proof of equivalence between the selectors. Both the
+control and calibration sensitivity are development-only diagnostics. Their patterns are consistent with the canonical failure
+to beat both informed comparators, but they do not enlarge the canonical sample or its interval coverage.
