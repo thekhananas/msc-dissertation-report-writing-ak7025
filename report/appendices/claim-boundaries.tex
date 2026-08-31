@@ -1,0 +1,53 @@
+\chapter{Claim and Scope Boundaries}
+\label{app:claims}
+
+The project evaluates one pinned model, two simulators with specified hidden states and observation rules, and one historical educational dataset. It does
+not provide evidence of improved human learning, mastery, motivation, reduced cognitive offloading, classroom readiness, or
+realised deployment savings. The tutoring interface is a proof of concept. The exploratory CSEDM analysis measures prediction
+and selection of likely errors. No corrective review intervention was performed.
+
+\section{Limits of Each Study}
+
+\paragraph{Benchmark of an external model (RQ1).}
+The 23 eligible cases describe one fixed authored corpus and one recorded generation per case and channel. The evaluation model
+is not a validated substitute for a student. The complete harness correction supersedes the original apparent advantage.
+The remaining one-case accuracy difference leaves a useful benefit unresolved.
+Passing an authored test also does not establish compliance with every task requirement. A favourable worked example cannot
+establish that relevance caused the improvement, especially when unrelated passing evidence yields the same prediction.
+
+\paragraph{Bounded tracking (RQ2).}
+The positive finding concerns the declared average adverse-condition Brier score and clean-condition penalty rule. Missing and
+contradictory evidence individually worsened. The bound limits one observation's contribution to log-odds. Repeated bounded
+updates can accumulate. This is separate from an empirical accuracy or calibration claim.
+
+\paragraph{Probe selection within a fixed budget (RQ3).}
+The experiment selects a whole batch from calibrated starting probabilities. It does not test uncertain initial estimates,
+conversational adaptation, or stopping when further evidence seems unhelpful. The candidate must fill its allocation.
+Its clipped-belief score need not equal the expected error reduction of the decision executed, so comparisons apply to that
+heuristic and the implemented baselines. The true-channel reference is not a proven optimum.
+
+Average harm across the selected held-out settings does not mean every setting worsened. Their equal weights define the study
+comparison, rather than the prevalence of failures in deployed tutors. Primary intervals condition on the fitted calibration
+model. The per-environment point-estimate check is not a statistical safety guarantee. More simulated episodes improve precision
+within these assumptions. They do not validate the assumptions against learners.
+
+\paragraph{Finding errors in historical learner records (RQ4).}
+The 729 targets come from 86 learners and 19 problems. Learner-separated folds support the specified prediction evaluation,
+without establishing generalisation to unseen problems or courses. The uncertainty result concerns which existing model errors
+are selected. It does not show that another observation or reviewer would correct them. Learner resampling retains fitted
+predictions and selection identities. The interval excludes retraining and reranking variation, and does not fully represent
+dependence from overlapping cross-validation training sets.
+
+\section{Research and Demonstration}
+
+The recorded experiment view explains frozen evidence. The optional live route, if retained, illustrates provider and sandbox
+integration on a development case. It uses a separate simple scoring rule. A successful live run adds no canonical research
+evidence, and neither route establishes tutoring efficacy. A fixed probe count measures allocation, not optimisation of varying
+monetary or latency costs. Financial savings cannot be inferred from fewer simulated probes alone.
+
+\section{Changes from the Proposal}
+
+The original proposal included a broader multi-agent POMDP, Cognitive Bandwidth and Friction variables, sequential Monte Carlo,
+reinforcement learning, and a future human pilot. These elements were narrowed or deferred because no validated learner transition
+model or approved human-study design was available. The final technical work instead concentrates on measurable evidence handling,
+controlled comparison, and reproducibility.
