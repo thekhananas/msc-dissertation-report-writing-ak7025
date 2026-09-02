@@ -338,8 +338,59 @@ intervals from 20,000 draws. These intervals are conditional on the frozen calib
 from collecting another calibration sample. The separate 20-seed development sensitivity analysis does not change that scope.
 
 The success rule requires favourable aggregate intervals against all three comparators and no adverse per-environment point
-estimate against the plug-in clipped-belief comparator. This is the prespecified study criterion. A point estimate cannot rule out meaningful
+estimate against the plug-in comparator. This is the prespecified study criterion. A point estimate cannot rule out meaningful
 harm, so the rule is not a per-environment safety guarantee. Equal weighting describes the chosen stress-test mixture, not
 deployment prevalence. The candidate failed this rule. The threshold and comparators remained fixed.
 
 \section{Prediction from Historical Learner Records}
+
+The exploratory analysis uses the CSEDM 2019 Data Challenge, version 1.1, which documents novice Python programming records and ten student-separated
+evaluation folds \parencite{csedm2019challenge}. The local inventory identifies the analysed archive by its SHA-256 checksum.
+The separate Java CodeWorkout release is excluded. Each target's learner-history features use only that learner's earlier events. Preprocessing is fitted within
+the training fold. Overall prevalence, problem frequency, and a fixed learner-history logistic model produce out-of-fold
+predictions. The primary model uses earlier activity, submission, correctness, hint-request and distinct-problem counts or rates,
+plus training-learner success on the target problem. The latter excludes the target's own label for training rows. Test features
+use training-fold statistics only. Missing values use training medians and indicators. Numeric scaling is fitted on training data.
+Problem success rates use the available training-fold labels without a global calendar cut-off. The evaluation therefore
+tests prediction for learners excluded from model fitting on the existing problem set. It does not recreate deployment in
+which only records collected before a particular date are available for training.
+
+The chronology boundary is strict: an event contributes features only when its \texttt{Order} is less than the target's
+\texttt{StartOrder}. The supplied \texttt{FirstCorrect} value is the outcome, never an input. The source defines the target
+as first-attempt success without requesting a hint \parencite[The Data, Predict.csv]{csedm2019challenge}. This study uses
+that supplied label rather than reconstructing it from later events. The target's later correctness,
+hint use and attempt count are also excluded. Learners could attempt problems in different orders, so problem identity alone
+does not establish which events were available at prediction time.
+
+The source documentation notes that activity correctness was reconstructed after the original study and may differ from the
+feedback learners received. Version 1.1 also corrected leakage in the supplied example model. This dissertation uses its own
+fold-specific pipeline. Reproducing the supplied example's metrics checks agreement with that reference. The documented data
+limitations still apply. The local inventory retains unavailable activity correctness values. They are excluded from
+correctness-rate denominators while activity counts retain the events.
+
+The predictor uses scikit-learn \parencite{pedregosa2011scikit}. The locked environment specifies the installed version.
+The frozen \path{v1-analysis.yaml} CSEDM plan specifies logistic regression with an intercept, L2 regularisation and inverse
+regularisation strength $C=1$. Training uses the \texttt{lbfgs} solver, no class weighting, at most 1,000 iterations, and tolerance
+$10^{-8}$. The recorded random seed is 9052901. The implementation treats a convergence warning as a failed run rather than
+silently accepting an unfinished fit. These settings are fixed. There is no hyperparameter search, fitted probability calibration,
+or model selection based on test-fold results.
+
+Probabilities at or above 0.5 predict first-attempt success. The separate uncertainty ranking uses $|p-0.5|$ in ascending order.
+Small values mean the classifier is near its decision threshold. This is a simple ranking score, not a full estimate of model
+uncertainty or a guarantee that a probability is calibrated. Equal scores are ordered by a stable hash of the fold, learner,
+problem and prediction cut-off identifiers, without using the outcome.
+
+For fold $f$ with $N_f$ targets, selection takes $k_f=\lfloor0.5N_f\rfloor$ predictions closest to probability $0.5$.
+This selects 361 of 729 targets, rather than the 364 from a single global allocation. If $E_f$ is the fold's error count, expected
+random error capture is $\sum_f k_f E_f/N_f$. Dividing this by $\sum_f E_f$ gives the random captured-error recall used in the
+primary comparison. The observed recall uses the actual number of selected errors instead.
+
+Accuracy, Brier score, log loss and calibration error are secondary descriptions. Log loss clips probabilities at $10^{-6}$
+and $1-10^{-6}$. Calibration error uses ten equal-width bins. Leave-one-fold-out summaries check whether omitting a single fold
+changes the primary pattern. They do not retrain models or create independent replications.
+
+The 10,000-draw bootstrap resamples learners, retaining all their rows and the original predictions and selections. Its interval
+is conditional on those fitted predictions and selections. Models are not refitted and cases are not reranked. The original
+fold selection probabilities $k_f/N_f$ are also held fixed when calculating the resampled random comparator. Shared training
+sets across folds create further dependence that learner resampling does not fully represent. The analysis concerns the existing
+learners and problems. It establishes neither unseen-problem generalisation nor whether reviewing an error would correct it.

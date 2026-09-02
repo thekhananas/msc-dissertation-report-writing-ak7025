@@ -288,3 +288,73 @@ This control checks the effect of that particular mismatch between ranking input
 permutations, a probability that reliability information is useful, or proof of equivalence between the selectors. Both the
 control and calibration sensitivity are development-only diagnostics. Their patterns are consistent with the canonical failure
 to beat both informed comparators, but they do not enlarge the canonical sample or its interval coverage.
+
+\FloatBarrier
+\section{Historical CSEDM Companion}
+\suppressfloats[t]
+
+The learner-history logistic model produced 195 errors over 729 out-of-fold predictions, with accuracy 0.733. The problem-frequency
+baseline produced 200 errors and accuracy 0.726. Selecting the most uncertain 361 predictions captured 141 of the 195 logistic
+model errors, compared with an exact random expectation of 49.54\%. The gain was 22.77 percentage points. Its learner-bootstrap
+95\% interval was 16.41 to 28.98 points. Figure~\ref{fig:csedm-result} shows the share of errors captured by each selection
+approach and the difference between them.
+
+Selection took half of each test fold, rounded down. This was an offline ranking calculation. No reviewer intervention was
+performed. The interval resamples learners while retaining the fitted predictions and original selections, so it is conditional
+on the fitted models and selected rows. It does not include refitting or reranking variability. The study supports error
+prioritisation on the existing problem set, without showing that subsequent review would correct those errors or that the
+finding extends to unseen problems.
+
+\input{assets/tables/ch06-evaluation/model_comparison.tex}
+
+The overall-success-rate baseline illustrates a limitation of the calibration summary in
+\Cref{tab:csedm-model-comparison}. Its ten-bin calibration error is approximately 0.000395, displayed as 0.000 after rounding.
+That value describes agreement between average predicted probabilities and observed success rates within the bins. It does
+not mean that individual predictions are correct. This baseline predicts success for all 729 targets and makes 353 errors.
+Its low calibration error therefore provides no evidence that it can distinguish the cases that will succeed from those that
+will fail. The logistic model's five fewer errors than the problem-frequency baseline are also a descriptive comparison.
+The reported primary interval concerns uncertainty-based error selection. Model superiority would need a separate comparison.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{assets/figures/ch06-evaluation/uncertainty_error_review.pdf}
+  \caption{Offline error prioritisation on 729 historical predictions from 86 learners across 19 Python problems. Selecting the
+  most uncertain half within each fold, rounded down, captured 141/195 errors across 361 selected predictions. Random selection
+  at the same fold allocations would capture 49.5\% in expectation. The gain was 22.8 percentage points (95\% learner bootstrap
+  interval: 16.4 to 29.0). Larger values indicate more errors found. The interval conditions on fitted predictions and fixed
+  selections. No review intervention, executable probe or learning effect was tested.}
+  \label{fig:csedm-result}
+\end{figure}
+
+\FloatBarrier
+\section{Local Computation and Its Measurement Limits}
+
+The runtime records establish that the simulator work was practical on the development machine. They do not measure a
+deployed tutor's response time. The tracker profile used CPython 3.12.13 on macOS with an ARM processor. The acquisition
+profile additionally recorded ten logical CPUs and 16 GiB of physical memory. These are development measurements, separate
+from the canonical scientific comparisons.
+
+In the tracker timing study, each tracker processed 13,224 recorded updates with available evidence per repetition. An untimed validation pass established a reference checksum, followed by three warm-up repetitions and
+twenty timed repetitions. Workload preparation was outside the timed region, and garbage collection was disabled during
+measurement. Median time per update ranged from 1.55 microseconds for last-observation tracking to 2.94 microseconds for
+bounded channel-aware updating. Ordinary channel-aware updating took 2.73 microseconds. The timed loop included update
+invocation and checksum accumulation. These figures describe a prepared workload, not a full tutoring turn or an end-to-end
+simulation. No statistical runtime superiority claim follows from them.
+
+The probe selection study's compact development stream was measured in three fresh processes. Each processed 350 episodes across seven settings
+and seven policies, producing 98,000 case predictions. Median elapsed time was 4.73 seconds. The largest observed process
+peak resident memory was about 78.0 MiB. Timing began after plan loading and included stream generation, serialisation,
+hashing and writing to a temporary file, including its final flush to storage. It excluded interpreter startup and downstream
+analysis or figure generation. The recorded memory peak includes the process baseline, rather than measuring the policy alone.
+
+Scaling that development time by forty produced a 189-second planning estimate for the canonical workload, or 379 seconds
+with the declared factor-of-two allowance. Neither figure is a measured canonical duration. The canonical stream report
+records 14,000 episodes, 3,920,000 case predictions across seven policies and 1,960,000 selected simulated probes, with zero
+external-model or sandbox calls. These policy-level counts reuse the same episodes. They are not millions of independent
+observations. Canonical runtime and peak memory are not recorded in that report and remain unavailable here.
+
+% Sources: tracker development runtime fa5faaff4c604d185cb95486260f1afbceeadc96bd4b291d0dde4c840ce68540;
+% acquisition compact runtime 47d0441452375510610b4b2a7e8c1b162e30a5d65896f7177cc9f3e425ec87b5;
+% canonical stream cb13c0313c91c11a9cf39c79028180367534357fd6eac4394659e3a819851b60.
+
+\section{What the Uncertainty Intervals Cover}
