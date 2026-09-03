@@ -5,7 +5,7 @@ The implementation was narrowed to the parts needed to run, inspect, and reprodu
 Python tutoring task through a React interface and FastAPI service. LangGraph coordinates one bounded tutoring turn. A transparent
 tracker updates its estimate, a heuristic policy chooses the next action, and the event is appended to a structured local log.
 
-The demonstration, external-model benchmark, and simulator studies are separate paths. The tutor does not read hidden criterion
+The local demonstration, external-model benchmark, and simulator studies are separate paths. The tutor does not read hidden criterion
 answers or simulator truth. Generated Python from the external-model study was executed in Modal sandboxes configured to block network access.
 Research artefacts have content hashes and application-level checks against conflicting replacement. Recorded responses support
 replay without new provider calls. These checks do not make local files tamper-proof.
@@ -133,4 +133,23 @@ boundary described above. They do not establish that the original execution envi
 that every process had an operating-system-enforced restriction on criterion files.
 
 \texttt{tests/unit/test\_modal\_sandbox.py} uses a fake client to check forwarded requests and limits, bounded retained output,
-% UK spelling verified
+remote failure and an unavailable exit code. Source inspection of \texttt{sandbox/modal.py} confirms that the SDK call requests
+network blocking and supplies no project mounts or secrets. The distinction matters: a mock verifies the adapter's requested
+configuration, while enforcement by the remote service requires separate live evidence. No production-security certification
+is implied by these tests.
+
+The authored harness checks in \texttt{tests/unit/test\_sandbox\_python\_tests.py} distinguish command construction from
+execution. A capturing executor verifies the isolated Python command and result parsing without executing a submission.
+A separate trusted-fixture executor runs authored regression examples: nested tuple values matching the YAML sequence must
+pass, while a changed inner value must fail. This verifies the demonstrated comparison repair without claiming complete test
+coverage or authorising local execution of arbitrary generated code.
+
+\texttt{tests/unit/test\_benchmark\_external\_criterion.py} uses fake provider and executor responses to exercise the post-seal
+workflow. It checks that a completed retry makes no additional external requests, that a provider failure leaves a missing
+record rather than an incorrect answer, and that recorded inputs reproduce the pre-analysis datasets. Source inspection of
+\texttt{benchmark/external\_criterion.py} confirms that a new criterion phase requires a matching global seal and complete-case
+count before per-case access. The completed-report fast path returns the saved report after checking its plan and run identity.
+Separate replay and integrity checks are needed to audit the underlying files.
+
+The 26 focused tests in these five files passed against the development code at revision \texttt{b642e7e}.
+Appendix~\ref{app:reproducibility} records the remaining checks for the final release and its execution environment.
