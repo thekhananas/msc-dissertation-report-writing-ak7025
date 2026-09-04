@@ -5,7 +5,7 @@ The implementation was narrowed to the parts needed to run, inspect, and reprodu
 Python tutoring task through a React interface and FastAPI service. LangGraph coordinates one bounded tutoring turn. A transparent
 tracker updates its estimate, a heuristic policy chooses the next action, and the event is appended to a structured local log.
 
-The local demonstration, external-model benchmark, and simulator studies are separate paths. The tutor does not read hidden criterion
+The demonstration, external-model benchmark, and simulator studies are separate paths. The tutor does not read hidden criterion
 answers or simulator truth. Generated Python from the external-model study was executed in Modal sandboxes configured to block network access.
 Research artefacts have content hashes and application-level checks against conflicting replacement. Recorded responses support
 replay without new provider calls. These checks do not make local files tamper-proof.
