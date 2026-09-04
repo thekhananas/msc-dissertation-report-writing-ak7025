@@ -1,4 +1,138 @@
+% Working draft of discussion
 \chapter{Discussion}
 \label{ch:discussion}
 
-% Discussion of findings and threats to validity.
+The studies do not establish that more executable evidence generally improves prediction of programming performance. The external-model benchmark correction
+showed that a measurement fault could create an apparently large benefit. The bounded-update study then showed that limiting one observation's influence
+could help in a controlled tracker stress test. The probe-selection study showed the remaining difficulty: a cautious reliability model still selected
+probes less effectively on the held-out average than uncertainty-only selection and the plug-in clipped-belief comparator.
+
+The proposed selector's poorer performance supports keeping uncertainty-only selection as a baseline when testing more
+complex rules. The result also shows why each rule needs a comparison under the conditions where it will be used.
+Better reliability information and a different decision rule require further evaluation.
+
+\section{What the Mathematical Review Changes}
+
+Review after the experiment identified a gap between the acquisition score and the claimed expected classification benefit. Clipped
+beliefs were substituted into a Bayes-risk expression even though they need not be the posterior of the generating model.
+The counterexample in Chapter~\ref{ch:method} shows that the score can be positive when neither possible probe outcome changes
+the predicted class. Ranking also evaluates hypothetical reliability-specific updates, while execution uses calibration means.
+
+The experiment therefore evaluates the implemented ranking heuristic, not an exact value-of-information method. This narrows
+the interpretation of its failure. It cannot establish that accounting for reliability uncertainty is generally ineffective,
+or that a correctly specified expected-loss selector would also lose. Conversely, identifying the score limitation does not
+establish that repairing it would improve the result. No such repair was evaluated in the frozen study.
+
+The reference with access to true channel rates is similarly limited by its update and scoring rule. Its performance cannot
+be used as a bound on the best achievable accuracy. The measured classification errors remain observations of the frozen
+implementations. The report's corrected method descriptions preserve those observations.
+
+\section{Alternative Explanations for the Negative Result}
+
+The score mismatch is one possible contributor to the proposed selector's losses, but the experiment does not identify a single cause.
+Uncertainty-only selection has an important advantage in this design: the supplied starting probabilities are calibrated,
+so closeness to one half directly identifies cases with high initial classification risk. This gives the simple baseline
+a useful signal before any reliability estimate is considered. It does not explain every ranking difference or establish
+that the same advantage would persist with poorly calibrated starting probabilities.
+
+The lower-quantile score may also down-rank useful checks when their reliability estimates are uncertain. That is the
+intended caution mechanism, but caution is not automatically helpful at an exact allocation. The policy must still select
+twenty cases. Rejecting one candidate moves the check to another. The study therefore cannot
+separate a potentially useful refusal to probe from an unhelpful redistribution of a compulsory budget.
+
+Clipping introduces another trade-off. It limits movement from a bad observation, but can prevent a useful observation from
+changing a prediction. The development ablation varied clipping in both hypothetical scoring and executed updating, so it
+does not isolate those two effects. Its small descriptive interaction offers no clear evidence that lower-quantile scoring
+and clipping reinforce each other. A causal explanation of their respective contributions would require a separately
+specified component study. The existing diagnostics are insufficient.
+
+These alternatives change the interpretation of failure. The result rejects the proposed advantage for this combination
+of data-generating rules, calibration fit, score and allocation. It does not isolate reliability uncertainty as the cause,
+establish that a different quantile would succeed, or justify selecting a better-looking configuration after the fact.
+
+\section{Contribution in Relation to Existing Methods}
+
+Executable evidence and educational prediction were already connected in TIKTOC, while TRAVER examined verification in
+coding-tutor dialogues \parencite{duan2025tiktoc,wang2025traver}. ECED supplies a theoretical treatment of sequential noisy-test
+selection under explicit assumptions \parencite{chen2017noisy}. The dissertation neither replaces those methods nor provides
+a common-benchmark comparison against them. Its combination of familiar components is not sufficient evidence of novelty.
+
+The contribution is a documented analysis of failures in assessment and evidence selection. Predictions were retained before outcome reveal. Replay
+exposed how a scoring fault changed the apparent effect. Controlled comparisons tested a proposed response to unreliable
+evidence, and a mathematical check exposed a mismatch between the selector's score and its executed decision. Each step can
+be examined separately. The value is the documented mechanism and the limits of the resulting claim, rather than a claim
+that the pipeline or every safeguard is unprecedented.
+
+This matters for future tutoring systems because choosing to collect more evidence adds another measurement process whose
+quality must be checked. The present work gives concrete examples of that problem. It does not establish its prevalence,
+show that these faults dominate deployed systems, or demonstrate that the proposed policy solves it.
+
+\section{Selection, Updating and the Application Context}
+
+At the full probe allocation, ordinary selectors request every case and apply the same bounded update. The harm at this
+endpoint concerns the use of misleading evidence, independently of how cases are ranked. At smaller allocations, ranking
+changes which cases receive that update. These are distinct questions, and a budget curve alone does not isolate every cause
+of error.
+
+The starting probabilities in the probe-selection study are calibrated by construction. Its primary result concerns evidence-channel failures,
+not erroneous initial learner estimates. Selection is also performed once for a complete batch, with exactly 20 checks assigned
+to each episode. The study does not demonstrate a tutor choosing its next question after each student answer, deciding to stop,
+or adapting its teaching strategy over time.
+Those capabilities remain application motivations rather than measured contributions.
+
+The log-odds bound limits each observation's contribution. It does not prevent repeated misleading observations from accumulating
+harm. The bounded-update study improved the adverse-condition average but worsened missing and contradictory conditions. Both results argue for
+reporting condition-level failures alongside an aggregate, rather than interpreting a bounded update as a safety guarantee.
+
+\section{What the Historical Data Add}
+
+The exploratory CSEDM analysis asks whether the simplest selection signal remains useful beyond an authored simulator.
+Here, the probabilities come from a logistic model fitted to historical learner activity. The analysis covers 729 predictions
+from 86 learners across 19 Python problems.
+
+Within the fixed fold-level allocations, selecting the 361 most uncertain predictions captured 141 of 195 model errors
+(72.3\%). Random selection at the same allocation would capture 49.5\% in expectation. This provides evidence that
+uncertainty can help locate prediction errors in these records, even though it does not explain how to correct them.
+
+This is the connection to the earlier studies. The external-model benchmark tests the value of additional evidence, while
+the simulations examine how evidence is interpreted and selected. The historical records test whether uncertainty identifies
+where closer attention might be useful. They contain no matching optional-probe outcomes, so the result cannot validate the
+probe-selection rule or establish that the simulator's failure settings reflect classrooms.
+
+No reviewer intervened on the selected predictions. Error capture measures where errors were concentrated, rather than how many
+could be corrected. Learner-separated folds assess predictions on the existing problem set. They do not test transfer to unseen
+problems or courses. The small descriptive accuracy difference between the logistic model and problem-frequency baseline also
+does not establish a meaningful predictive advantage by itself.
+
+\section{Implications for Tutor Design}
+
+An executable result needs an inspectable assessment record. The prompt, submitted code, tests, test output and task requirements
+should remain linked so that a teacher or learner can see what was checked. The harness correction shows that repeatable execution
+can still produce a misleading outcome when comparison logic or test coverage is wrong. A tutor should distinguish code that
+failed to run, code that ran and failed a test, and code that passed incomplete tests. It should also provide a route for disputing
+the interpretation.
+
+The prediction update should expose its basis. A reviewer should be able to see the previous estimate, the evidence category,
+the assumed reliability and the resulting decision. Bounding one update can limit the effect of a bad observation, but the
+simulation shows that it can also discard useful information and that repeated errors can accumulate. Simple comparators such as
+uncertainty-only selection should remain part of evaluation whenever a more elaborate policy is introduced.
+
+Programming evidence can contain personal work, identifiers or sensitive context. Sending it to an external model and executing
+it in a remote sandbox create separate data and security risks. A deployed system would need clear data destinations, limited
+retention, deletion arrangements and isolated execution. The recorded fallback keeps the demonstration available during service
+failure. Accepting untrusted public submissions would require a separate security design. These concerns sit alongside the transparency, privacy and
+beneficence issues identified in reviews of educational LLM systems \parencite{yan2024practical}.
+
+Repeated checks also use learner time. Their burden may fall unevenly if prediction errors differ across prior experience,
+language background, disability or access conditions. Before classroom use, the system would need accessible alternatives,
+subgroup error analysis and teacher oversight of disputed or high-consequence decisions. The scores studied here provide no
+basis for grading a learner, withholding teaching or deciding that a concept has been mastered.
+
+\section{Changes from the Proposal}
+
+The proposal joined a Socratic multi-agent tutor, a cognitively constrained student simulator, hidden-state tracking and
+reinforcement-learning policy evaluation. That design required credible measurements of learning and cognitive load before
+its policy results could be interpreted. The first implementation decision was therefore to establish a working tutoring path
+and test whether its evidence could support a reliable prediction. The later tracker, acquisition and historical-data studies
+
+% Address reviewer concern: why did Huber bounds help while greedy selection failed?
