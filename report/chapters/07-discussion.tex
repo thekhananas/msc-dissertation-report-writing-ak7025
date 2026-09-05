@@ -1,4 +1,3 @@
-% Working draft of discussion
 \chapter{Discussion}
 \label{ch:discussion}
 
@@ -135,4 +134,96 @@ reinforcement-learning policy evaluation. That design required credible measurem
 its policy results could be interpreted. The first implementation decision was therefore to establish a working tutoring path
 and test whether its evidence could support a reliable prediction. The later tracker, acquisition and historical-data studies
 
-% Address reviewer concern: why did Huber bounds help while greedy selection failed?
+followed problems exposed by that measurement work. Table~\ref{tab:proposal-changes} records why each proposed component was
+implemented, narrowed or deferred, and how the decision limits the conclusions.
+
+\setlength{\LTcapwidth}{\textwidth}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}@{\hspace{1.2em}}>{\raggedright\arraybackslash}p{0.34\textwidth}@{\hspace{1.2em}}>{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
+  \caption{Major changes from the proposal. Each row states the reason for the final scope and the resulting limit on the
+  dissertation's claims.}
+  \label{tab:proposal-changes} \\
+    \toprule
+    Proposed work & Final decision and reason & Limit on the conclusion \\
+    \midrule
+    \endfirsthead
+    \toprule
+    Proposed work & Final decision and reason & Limit on the conclusion \\
+    \midrule
+    \endhead
+    Cognitive bandwidth and friction model & Deferred because the project had no validated measure of cognitive load. Declared
+      evidence-failure settings were used to test prediction methods.
+      & The study estimates prediction error under constructed settings. It does not estimate a learner's mental state. \\
+    \addlinespace
+    External model acting as a learner & Reframed after the behaviour audit failed. The pinned model became the object evaluated
+      on isolated programming tasks.
+      & Its performance supplies no evidence of human learning or faithful learner simulation. \\
+    \addlinespace
+    Particle tracking and POMDP policy learning & Replaced by inspectable Bayesian updates and fixed-budget selection because no
+      learner-transition data justified fitting a sequential teaching policy or reward.
+      & The result concerns prediction and selection for one batch. It does not evaluate a learned conversational policy. \\
+    \addlinespace
+    Multi-agent tutoring platform & Reduced to one bounded LangGraph turn and a separate evaluation pipeline, sufficient to
+      demonstrate the interaction and isolate the measurement problem.
+      & The demo establishes a working interaction path. It does not establish superior pedagogy. \\
+    \addlinespace
+    Later student evaluation & Deferred because recruitment, ethics approval and an independent learning outcome were outside
+      the study period. CSEDM supplies a historical check of uncertainty-based error selection.
+      & The real-data result concerns which existing predictions are wrong. It does not show that review or probing improves
+      student outcomes. \\
+    \bottomrule
+\end{longtable}
+
+The harness correction motivated closer examination of evidence quality. It did not logically require the acquisition
+heuristic eventually chosen, nor did it establish that bounded Bayesian updates were the right remedy. Those were additional
+methodological choices tested in separate studies. The negative acquisition result and the later score counterexample are
+therefore part of the outcome of this development, rather than obstacles to a predetermined success story.
+
+The historical-data companion tests a remaining premise: whether uncertainty can identify errors on learner records.
+Its positive selection result cannot compensate for the missing ordinary value-of-information comparison or validate the
+simulator's failure settings. Keeping those questions separate prevents the final narrative from combining different kinds
+of evidence into an unsupported tutoring-effect claim.
+
+\section{Threats to Validity}
+
+The external-model study used one model run and 23 eligible authored cases. The simulator studies contain many episodes but only
+increase precision inside authored environments. The historical analysis contains 729 targets nested within 86 learners and 19
+problems. None of these populations supports general claims about learners, courses, programming languages, or deployed tutors.
+
+The policy and evaluation environments were designed within the same project. Withholding the true settings prevents the
+policy from using those settings directly. The choice of environments can still favour the designer's assumptions.
+Independent observations of evidence failures would help assess whether the chosen conditions represent practice.
+A study of learning would also require unaided transfer or retention outcomes and ethics approval.
+
+The primary probe-selection intervals hold the calibration fit fixed. The CSEDM bootstrap retains fitted predictions and the original
+selection while resampling learners. Neither includes the full variability of refitting and selecting a system from new data.
+Calibration-seed sensitivity and fold sensitivity provide separate diagnostic evidence. They do not broaden those intervals.
+
+The external-model benchmark's criterion checks remain a limited instrument even after the sequence-comparison fault was repaired. A passing result
+can miss a task requirement, as the worked example demonstrates. Agreement between raters establishes consistency on the
+reviewed material, not correctness of the criterion labels or a measure of human mastery.
+
+The six altered evidence settings in the probe-selection study receive equal weight by design. The resulting average describes that mixture, not the prevalence
+of failures in practice. The prespecified no-adverse-point-estimate rule is also weaker than statistically excluding a material
+regression in every setting. No deployment-safety or monetary-saving claim follows from passing such a rule.
+
+\section{A Future Study with Students}
+
+A future study should begin with a small feasibility pilot after institutional review. It would examine whether students
+understand the tasks, can complete a session in the available time and can challenge a disputed test result. Software faults
+and ambiguous tests would be recorded alongside the reasons for each disputed result. These observations would guide repairs
+to the workflow and its checks.
+
+Before recruitment, the workflow would need reviewed arrangements for external model requests, execution of submitted code
+and service failures. Students would need a way to question the system's interpretation. An ambiguous answer or faulty test
+can lower a score, so the current evidence gives no basis for using that score to determine a grade or access to teaching.
+
+A subsequent study could ask whether adding an executable check improves performance on an unseen programming task completed
+without assistance. Random assignment would compare a specified tutoring workflow with and without the check, using the same
+task pool and total session time. Time spent on the check would count towards that allowance. The study would therefore
+measure whether its diagnostic benefit justifies the teaching time it uses.
+
+The protocol would specify prior attainment, independent scoring of the final task, handling of incomplete sessions and a
+smallest worthwhile improvement before calculating the required sample size. Assessors should be unaware of the assigned
+condition where practical. A later assessment would be needed to measure retention. The pilot's usability findings would
+help design this study. Evidence of learning would require the assessment itself.
+
