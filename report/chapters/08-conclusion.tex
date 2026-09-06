@@ -1,4 +1,33 @@
 \chapter{Conclusion}
 \label{ch:conclusion}
 
-% Final summary and future work.
+The dissertation examined whether additional programming evidence helps performance prediction, and how a system should handle
+that evidence when it may be unreliable. The four research questions produced the following answers.
+
+\paragraph{RQ1: Extra coding evidence.}
+On the corrected authored benchmark, executable evidence changed accuracy from 18 to 19 correct predictions among 23 eligible
+cases. The accuracy difference was 4.35 percentage points. Its paired 95\% interval of zero to 13.04 percentage points includes the declared ten-point useful improvement, so that benefit
+remains unresolved. Passing unrelated and relevant evidence produced the same decisions. The earlier, larger apparent effect
+depended on an execution-harness defect, showing why executable assessment needs its own scrutiny.
+
+\paragraph{RQ2: Limiting a bad check.}
+Across the tracker simulator's adverse settings, bounded updates reduced average Brier error compared with ordinary Bayesian updates using the assumed evidence model. They met the
+declared penalty limit under clean evidence. Bounded updates increased error under missing and contradictory evidence. The guarantee limits one
+observation's contribution to log-odds. Repeated misleading observations can still accumulate.
+
+\paragraph{RQ3: Choosing checks.}
+When half the cases received a probe, the candidate beat random selection but lost to uncertainty-based selection and the plug-in
+clipped-belief rule. Average error across the held-out settings increased as probe use rose. The acquisition score need not equal
+the expected error reduction of the executed decision, so this result concerns the implemented heuristic and does not answer
+whether ordinary value-of-information selection would succeed. At full budget, differences concern updating rather than ranking.
+
+\paragraph{RQ4: Finding likely errors.}
+The exploratory CSEDM study used 729 predictions from 86 learners across 19 problems. Selecting 361 predictions by uncertainty
+captured 141 of 195 model errors (72.3\%), compared with 49.5\% expected under random selection. No corrective review was performed, so the
+analysis does not show that selection would correct errors or improve later performance. The confidence interval for the difference in error recall holds the fitted
+predictions and selections fixed. It does not establish transfer to new problems.
+
+\paragraph{Contribution and implication.}
+The pipeline preserves predictions before outcome reveal and exposes failures in both executable assessment and evidence use.
+An AI tutor should validate the check and the decision rule before changing a performance prediction. The working tutor
+illustrates that application. Teaching effectiveness and learning gains require a human study.
