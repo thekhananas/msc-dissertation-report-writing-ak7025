@@ -32,6 +32,40 @@ performed worse than the control. The guarded tutor did not show a statistically
 \parencite{bastani2025guardrails}. The result concerns those tools and that educational setting, rather than showing that all
 AI assistance harms learning.
 
+PISA 2025 adds broader educational context. The OECD reports that associations between AI use and science performance vary
+with the purpose of use and opportunities to develop AI literacy: students reporting AI use for specific schoolwork activities
+scored lower on average, while weekly general use was associated with similar performance to non-use
+\parencite{oecd2026pisa2025}. These are observational associations. Prior attainment and the
+reasons students seek assistance are possible alternative explanations. Published during the writing of this report, the
+findings reinforce the relevance of assessing performance carefully when AI is available.
+
+This motivates assessing what can be done independently, rather than treating a successful assisted answer as sufficient
+evidence. The present dissertation examines an earlier engineering question: how should a system interpret evidence when
+predicting a separate task outcome? Its external-model benchmark contains no student intervention, and its later coding task
+is an assessment of the evaluation model under fixed prompts. It cannot reproduce the human-learning result above or measure
+whether Socratic guidance reduces dependence on assistance.
+
+A tutor that accepts a convincing answer too readily may move on before a difficulty has been resolved. Repeated checks also
+have a burden: they require another response and, for executable work, another run of the code. The useful question is whether
+that extra observation supports a better decision. A low execution cost alone cannot answer it. An incomplete test or a poorly
+interpreted result may provide little help, even when running it is cheap.
+
+The original project proposed a broader Socratic tutor with a model of learner state. The completed work isolates the evidence
+and prediction problem so that its assumptions can be inspected. In the external-model study, an evaluation model supplies
+answers and code under fixed prompts. The simulations make evidence faults controllable,
+and the historical learner records provide a separate test of uncertainty-based error selection. Each setting answers a
+different part of the problem.
+
+The corrected external-model benchmark found one additional correct prediction among 23 eligible cases, an improvement of
+4.35 percentage points. Its 95\% paired bootstrap interval ranged from 0 to 13.04 points, including the prespecified
+10-point useful difference. The study therefore left a useful benefit unresolved. The interval also has the small-sample and
+case-dependence limitations discussed in \cref{ch:evaluation}.
+
+This uncertain finding motivated the later investigation, but did not prove that selective acquisition would solve the problem. The
+tracker maps evidence categories to fixed score changes. Two different checks can consequently lead to the same prediction.
+The follow-up studies therefore examine both the handling of uncertain evidence and the allocation of checks, while retaining
+the limits of the initial instrument. They do not establish actual financial savings or a benefit to learning.
+
 \section{Research Questions}
 
 The central question is:
@@ -78,3 +112,60 @@ records do not contain. The direct answers appear in \cref{ch:evaluation}. Their
 
 % Keep the contribution table after the research questions and its introduction.
 \suppressfloats[t]
+\section{Contribution}
+
+The engineering contribution is a reproducible pipeline that separates visible evidence, fixed predictions, and withheld
+outcomes, with recorded execution and correction histories. The methodological work implements and tests bounded evidence
+updates and a reliability-aware fixed-budget selection rule. Bayesian updating and expected-loss decision theory are established
+methods. The contribution lies in implementing the specified rules and examining their behaviour under faulty evidence.
+
+The main selection result is negative. The proposed rule beat random choice, yet it made more errors on average across the
+six test environments than choosing the most uncertain cases or using a simpler estimate of check reliability. Requesting
+more checks also increased the average error. A mathematical review after the experiment found that the rule could favour
+a check even when either result would leave the predicted outcome unchanged. Its score therefore need not represent a
+reduction in prediction error. This limits what the comparison can establish about ordinary value-of-information selection.
+
+Together, the studies examine how assessment defects, evidence assumptions, and decision rules affect measured performance.
+Their contribution is bounded by the chosen tasks and environments. They do not establish improved teaching, realistic student
+simulation, or an optimal evidence-acquisition policy. Table~\ref{tab:contributions} summarises what each part contributes
+and the limits of its evidence.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Contributions and the limits of the evidence. Chapters~\ref{ch:system}--\ref{ch:evaluation} describe the implementation,
+  methods and results supporting each entry.}
+  \label{tab:contributions}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Component & Contribution & Boundary \\
+    \midrule
+    Evaluation pipeline & Saved predictions before outcome reveal, with traceable execution records and a complete harness-correction replay.
+      & Integrity checks cannot establish complete test coverage or improved teaching. \\
+    \addlinespace
+    Bayesian tracking & Implemented bounded updates and measured their benefit and harm across declared evidence faults.
+      & Uses established Bayesian mathematics. The simulator average improved, with individual conditions worsening. \\
+    \addlinespace
+    Selective acquisition & Implemented a reliability-aware ranking rule, evaluated matched budgets and exposed a mismatch between its score and decision loss.
+      & The candidate lost to two stronger comparators. The finding concerns the implemented heuristic, not ordinary value of information. \\
+    \addlinespace
+    Historical-data companion & Reproduced learner-separated prediction and measured uncertainty-based error selection on CSEDM records.
+      & Analyses existing predictions. The records contain no probe intervention or outcome from corrective review. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+The contribution is therefore an inspectable evaluation system and a set of bounded empirical and methodological findings.
+The tutoring demonstration makes that system's context tangible, but is not an additional effectiveness study. Any claim of
+novelty must be narrower than this inventory and supported by the direct comparisons with prior work in
+\cref{ch:related-work}.
+
+\section{Report Structure}
+
+\Cref{ch:related-work} examines the work that informed the assessment and decision methods.
+\Cref{ch:measurement} defines the authored benchmark and the separation between evidence used for prediction and the later
+outcome used for evaluation. \Cref{ch:system} explains how the implementation preserves that separation and records failures.
+
+\Cref{ch:method} describes the Bayesian tracker, the fixed-budget acquisition heuristic, and the separate historical-data
+study. \Cref{ch:evaluation} presents their results, including the execution-harness correction and the unsuccessful acquisition
+comparison. \Cref{ch:discussion} considers alternative explanations and the limits of applying these findings to tutoring.
+\Cref{ch:conclusion} states what the dissertation establishes and what remains untested.

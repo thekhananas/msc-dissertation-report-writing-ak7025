@@ -34,7 +34,7 @@ establish that the supplied list was changed. The corrected analysis remains a c
   increased correct predictions from 13/23 to 20/23 under the original scoring, and from 18/23 to 19/23 after correction.
   The corrected reduction in classification error was 4.3 percentage points (95\% paired bootstrap interval: 0 to 13.0).
   Positive differences favour adding evidence. Related and unrelated passing checks produced identical predictions.
-  The correction reuses one recorded model run. It does not measure learning.}
+  The correction reuses one recorded run. It does not measure learning.}
   \label{fig:harness-correction}
 \end{figure}
 
@@ -358,3 +358,60 @@ observations. Canonical runtime and peak memory are not recorded in that report 
 % canonical stream cb13c0313c91c11a9cf39c79028180367534357fd6eac4394659e3a819851b60.
 
 \section{What the Uncertainty Intervals Cover}
+\suppressfloats[t]
+
+Each interval describes variation under a particular analysis. Table~\ref{tab:interval-scope} states what was resampled
+and what remained fixed. Pairing keeps the compared methods on the same cases or episodes. It does not remove limitations
+in the data or the generating model.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Scope of the reported bootstrap intervals. Resampling changes the contribution of observed cases, episodes or
+  learners to the estimate. It does not collect new model responses, create new failure settings or retrain the predictors.}
+  \label{tab:interval-scope}
+  \medskip
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Study & Resampled unit & Fixed inputs and excluded variation \\
+    \midrule
+    External model & Paired differences for the 23 eligible authored cases. & Recorded model responses, tracker and corrected checks. Case resampling does not account for shared concept families or variability from a new model run. \\
+    \addlinespace
+    Bounded updates & Paired effects for each episode. Turns are summarised within episodes. & Authored simulator rules and tracker settings. The interval does not describe new failure mechanisms or real learners. \\
+    \addlinespace
+    Probe selection & Paired episodes within each evaluation environment. Environment means receive equal weight. & Fitted calibration model, policies and six stress settings. Neither calibration refitting nor uncertainty about deployment frequencies is included. \\
+    \addlinespace
+    Learner records & Learners, keeping each learner's prediction records together. & Fitted predictions from the evaluation folds and selected review cases. Models are not retrained and cases are not ranked again. Dependence from overlapping training folds is not fully represented. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Adjusting the three primary probe-selection intervals for multiple comparisons leaves their scope conditional on the fitted
+calibration and chosen environments. Development checks of calibration remain diagnostic. The CSEDM intervals likewise
+exclude variability from retraining.
+
+More simulated episodes can narrow an interval under the authored rules. They cannot establish that those rules describe
+classroom behaviour. The external benchmark, simulations and historical learner analysis therefore retain separate conclusions.
+
+\section{Answers to the Research Questions}
+
+\begin{description}
+  \item[RQ1: Extra coding evidence.] The corrected benchmark does not establish whether giving every case an extra coding
+  check provides a useful prediction benefit. Accuracy changed from 18 to 19 correct predictions among 23 eligible authored
+  cases. The paired interval, 0 to 13.04 percentage points, is too wide to rule in or rule out the declared ten-point useful
+  improvement.
+
+  \item[RQ2: Limiting a bad check.] The bounded update passed its prespecified simulator rule. Across the adverse settings,
+  its mean Brier error was 0.0094 lower than ordinary channel-aware Bayes, while its clean-setting penalty was 0.0033. Missing
+  and contradictory evidence still produced worse individual results, so bounding did not improve every condition.
+
+  \item[RQ3: Choosing checks.] The proposed selector did not choose better cases than all three prespecified comparators at
+  the fixed half-budget allocation. It beat random selection by 1.19 percentage points, but its error exceeded
+  uncertainty-only selection by 0.86 points and the plug-in clipped-belief rule by 0.54 points. Because its score need not
+  equal expected classification-error reduction, this result does not answer whether ordinary value-of-information selection
+  would perform better.
+
+  \item[RQ4: Finding likely errors.] In the exploratory CSEDM analysis, uncertainty found more existing prediction errors
+  than random selection at the same allocation. It selected 141 of 195 errors, or 72.3\%, compared with 49.5\% expected under
+  random selection. No corrective review was performed, so the result does not show that selecting these predictions would
+  improve later performance.
+\end{description}

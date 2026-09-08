@@ -308,5 +308,218 @@ This establishes a direct precedent for choosing observations according to expec
 experiments assume equal acquisition costs. Their results should not be described as measurements of monetary savings.
 
 The probe-selection study differs in both timing and objective. It allocates checks to evaluation cases, retains its fitted calibration model and
+updates individual predictions. Every attempted probe counts as one unit, including a missing result. The primary policies
+receive the same allocation, so differences in their error rates compare which checks they select. They do not show that
+one policy uses fewer calls than another at that allocation.
 
-% Synthesised related work subsections
+The secondary budget curve compares allocations, but does not price their consequences. A deployment would need to account
+for model requests, execution, retries, elapsed time and the burden of answering an extra question. Different checks could
+have different costs. No such cost estimate enters the frozen selector, and the simulator makes no external requests.
+The defensible description is therefore fixed-budget evidence selection. The resource records describe observed workload
+in the external-model experiment. They do not establish realised savings from a deployed tutor.
+
+Selective prediction provides a nearby, but different, decision. A selective classifier can refuse to make a prediction when
+its expected risk is too high, trading coverage against error \parencite{geifman2017selective}. The acquisition experiment
+cannot refuse: it must allocate exactly 20 checks. A low-scoring case therefore loses a check to another case. It does not
+save an interaction. This is why the study reports error at a fixed allocation rather than a risk--coverage guarantee.
+
+The same distinction now appears directly in knowledge tracing. Mitton and colleagues use model uncertainty to defer a fixed
+share of predictions for teacher review across three neural knowledge-tracing models \parencite{mitton2026defer}. Their work
+supports uncertainty as a review signal. It does not test whether an extra coding check improves the deferred prediction. The
+CSEDM companion study addresses the first question with simpler models. The acquisition study addresses the second only inside
+its declared simulator.
+
+\section{Evaluation and Simulator Validity}
+
+The evaluation must match the decision being studied. A teaching intervention asks whether assistance changes learning.
+A prediction study asks whether observations anticipate an outcome. An acquisition study asks which additional observations
+improve that prediction within a resource limit. Evidence for one question can motivate another, but the connection requires
+an experiment. This section uses that distinction to assess the available evaluation approaches.
+
+Tutor-response quality, prediction accuracy, and later independent performance are different outcomes. Dr.Academy evaluates
+the quality of educational questions \parencite{chen2024dracademy}. MRBench evaluates tutor replies to mistakes and confusion
+across eight pedagogical dimensions \parencite[Sections 3--4]{maurya2025tutorevaluation}. MathTutorBench combines several
+pedagogical evaluation tasks \parencite{macina2025mathtutorbench}. The BEA shared task also found that automatically judging
+several tutoring dimensions remains difficult, even with human-labelled material \parencite{kochmar2025bea}. These criteria
+expose aspects of tutoring that a code pass rate cannot measure. A correct answer can still give away the solution or leave the
+learner without a useful next step.
+
+Evaluation software can make these distinctions easier to inspect. AITutor-EvalKit provides tutor assessment, model inspection
+and data visualisation in one application \parencite{naeem2026evalkit}. Earlier conversational systems such as AutoTutor also
+combined dialogue, feedback and scaffolding, with learning evaluated across several domains \parencite{nye2014autotutor}.
+These systems show the breadth of a tutor evaluation. The project's interface demonstrates its evidence flow, while its reported
+experiments measure prediction and evidence handling.
+
+The v1 public-answer ratings serve a different purpose. They categorise the evaluation model's visible answer as input to a
+prediction rule. They do not assess the tutor's pedagogical quality. Reviewer agreement therefore cannot substitute for an
+MRBench-style tutor evaluation. Conversely, favourable ratings of the demonstration would not establish that its predictions
+are accurate or that learners improve. This project preserves separate claims for the interface and the research results.
+
+LongTutor separates evidence acquisition, state diagnosis and teaching action in an evaluation grounded in learning histories
+\parencite[Section 3.1]{li2026longtutor}. Its evidence task asks models to extract historical information, combine records and
+recognise false premises. This differs from acquiring a new executable observation. The distinction is useful here: finding
+relevant history, predicting a later outcome and choosing guidance each require their own assessment. The historical learner-record study's
+features do not amount to LongTutor's diagnosis task, and the project's interface has not been evaluated on its teaching criteria.
+
+Two recent alternatives sharpen this boundary further. Koutcheme and colleagues use program repair as a proxy when evaluating
+LLM feedback for programming education \parencite{koutcheme2024repair}. The proxy may be practical, but it does not measure
+whether the learner understands the explanation. EducationQ evaluates teaching through multi-agent simulated dialogues
+\parencite{shi2025educationq}. Its design shows one way to study teaching behaviour, while also reinforcing the need to state
+what a simulated interaction can and cannot establish. Neither approach evaluates the case-level evidence decision used here.
+
+\subsection{A Simulated Response Is Not a Learner Outcome}
+
+The response to feedback needs its own validation. \textcite[Sections 2.1--2.3]{do2026misconception} compare a model's revision of
+an initially wrong answer under targeted, misaligned and generic feedback. Their Selective Flip Score subtracts the mean
+correction rate under the two controls from the correction rate under targeted feedback:
+\begin{equation}
+ \operatorname{SFS}=F_T-\tfrac{1}{2}(F_M+F_G).
+\end{equation}
+Here a correction means that the revised answer is correct. Across their seven prompted models, the authors report similarly
+high correction rates across feedback conditions and near-zero SFS. Their preprint examines behaviour that answer similarity
+alone would miss: whether a model responds selectively to relevant guidance.
+
+The score requires careful interpretation. Zero also occurs when all three correction rates are zero. On its own it cannot
+identify a model abandoning a misconception and solving the problem again. The component rates and response analysis are
+needed to distinguish that behaviour from never correcting an answer. This follows from the score's definition, and limits
+the mechanism that can be inferred from an aggregate difference.
+
+The distinction matters for v1. Its controls change the evidence supplied to a fixed prediction rule, rather than the feedback
+given to a model revising the same answer. Equal predictions after related and unrelated passing checks can arise directly from
+the tracker's category-based update. They do not establish the simulator behaviour studied by Do et al. This dissertation
+therefore uses their contrastive design as related methodological context. The v1 study is neither an SFS replication nor a validation
+of an external model as a student.
+
+StudentSim treats simulator construction as a separate training problem. It distinguishes matching an individual learner's
+responses from changing a response under guidance, and uses pooled training followed by individual specialisation
+\parencite[Sections 3--4]{yang2026studentsim}. Its evaluation spans chess, English writing and mathematics. Its tutor-training
+demonstration concerns chess, with expert ratings of generated guidance. These ratings should not be read as a measured
+learning gain for programming students. The source is a recent preprint, and its scope remains important when drawing comparisons.
+
+This dissertation has neither fitted its external model to learner records nor validated its reactions to teaching. A plausible
+wrong answer would not establish either property. Calling that model an evaluation target keeps the measured quantity explicit:
+the pipeline predicts whether that model's separate code response passes the authored checks. The result is about the model
+under those prompts, not an estimate of how students would learn from the tutor.
+
+The mathematical simulators serve a different purpose. Their hidden states and observation faults are specified so that
+updates and selection rules can be tested under controlled changes. Independent review can challenge their internal logic.
+It cannot establish that the chosen rates describe learners. The CSEDM records add observations from people, but contain no
+matching optional-probe intervention. Combining these studies therefore does not close the gap to a human tutoring evaluation.
+
+\subsection{What the Prediction Metrics Measure}
+
+Classification error assesses the chosen binary answer. It discards the distance from the decision threshold: probabilities
+of 0.51 and 0.95 both predict success at a threshold of 0.5. Brier score and log loss also assess the probability assigned to
+the observed outcome. Gneiting and Raftery describe their strict propriety: in expectation, reporting the true probability
+uniquely optimises the score \parencite[Section 3, Examples 1--2]{gneiting2007strictly}. The paper uses rewards to maximise.
+This dissertation reports losses to minimise.
+
+For example, when a task succeeds, moving its predicted probability from 0.6 to 0.8 reduces binary Brier loss from 0.16 to
+0.04 while leaving classification error unchanged. This arithmetic illustrates why the tracker and acquisition studies can
+reach different conclusions. Their primary outcomes assess different properties. A lower observed Brier loss also does not
+by itself prove calibration, or establish that requesting another check was useful. The report interprets each study using
+its specified primary outcome and treats the remaining metrics as supporting evidence.
+
+\subsection{Choosing an Evaluation Approach}
+
+A student intervention would provide the most direct evidence for a claim about teaching. It would require comparable
+starting conditions and an assessment completed without the tutor. The assisted and unassisted outcomes in
+\textcite{bastani2025guardrails} show why that choice matters. Such a study would assess the combined effects of the interface,
+guidance and learner response. Identifying the effect of probe selection itself would require a comparison that changes that
+selection while controlling the other components. The present experiments do not supply this causal comparison.
+
+Historical learner records offer observed programming performance and allow predictions to be tested on learners excluded
+from fitting. They also constrain the questions that can be answered. CSEDM does not record the optional checks required by
+the proposed acquisition policy, so it cannot reveal what would have happened after a different probing decision. Its role
+here is to test whether uncertainty identifies errors worth investigating. Error detection alone leaves the value of a new
+check unresolved.
+
+Executable benchmarks make correctness reproducible under specified tests. Their weakness is that the tests define the
+measured outcome: incomplete coverage can reward a response that violates the task. Holding the outcome back protects the
+prediction procedure from seeing the answer, but it cannot repair a defective assessment. This motivates the correction
+audit in the external-model study and limits its claim to the authored tasks and evaluation model.
+
+Controlled simulation permits each selector to face the same hidden outcomes and potential observations, including checks
+it chooses to skip. It therefore supports a direct comparison of acquisition rules. The price is dependence on the chosen
+data-generating assumptions. Separate calibration and evaluation settings challenge those assumptions. They do not establish
+how frequently the faults occur in education. The dissertation reports performance within those settings and uses the
+external-model and historical studies to examine different parts of the evidence problem.
+
+\section{Research Gap and Study Rationale}
+
+The project tests a limited connection between evidence and prediction. Its external-model experiment preserves a record of
+predictions made before a separate outcome was revealed. The tracker study tests bounded updates under authored faults, and
+the acquisition study compares a fixed-budget heuristic with simpler selectors. The historical-data companion concerns
+which prediction errors uncertainty can identify. None of these comparisons evaluates the quality of a tutoring dialogue.
+
+This leaves a clear boundary for the contribution. Tracing, verification and pedagogical evaluation already have dedicated
+methods. The present work contributes an inspectable experimental record and specific findings about its evidence-handling
+rules, including their failures.
+
+Table~\ref{tab:nearest-work} brings together the nearest comparisons. They share individual components with this dissertation,
+but study different decisions or outcomes. Their published results cannot therefore be placed on the same performance scale.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}p{0.21\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Work & Decision studied & Evidence and reliability & Relation to this dissertation \\
+    \midrule
+    TIKTOC \parencite{duan2025tiktoc}
+      & Predict student code and individual test outcomes from interaction history.
+      & Learns from code, histories and test-level outcomes.
+      & Establishes test-informed programming prediction. It does not allocate optional checks. \\
+    \addlinespace
+    TRAVER and DICT \parencite{wang2025traver}
+      & Rank candidate tutor responses in simulated coding dialogues.
+      & Uses a trained verifier and code-generation tests.
+      & Selects tutor responses and measures task completion, rather than selecting evidence for a saved prediction. \\
+    \addlinespace
+    Dynamic LENS \parencite{christie2024dynamiclens}
+      & Estimate learner state and uncertainty, with active question selection proposed.
+      & Combines learned forecasts with encoded responses.
+      & Motivates uncertainty-aware assessment, without reporting this fixed-budget check-allocation comparison. \\
+    \addlinespace
+    EPIG \parencite{bickfordsmith2023prediction}
+      & Acquire training labels that inform predictions on target inputs.
+      & Uses predictive information under a Bayesian model.
+      & Updates a predictive model. The present study updates individual case beliefs and measures classification error. \\
+    \addlinespace
+    ECED \parencite{chen2017noisy}
+      & Select tests sequentially to identify a hidden target and stop at an error bound.
+      & Assumes a known observation model with specified noise.
+      & Supplies noisy-test theory. Its guarantees do not apply to the project's fixed-batch heuristic or misspecified channels. \\
+    \addlinespace
+    R-IDeA \parencite{tang2026robust}
+      & Acquire training data under model misspecification.
+      & Combines representativeness, information and error-reduction criteria.
+      & Motivates testing under changed assumptions. The project neither implements its rule nor inherits its bound. \\
+    \addlinespace
+    Uncertainty deferral \parencite{mitton2026defer}
+      & Send a fixed share of knowledge-tracing predictions for teacher review.
+      & Ranks model predictions by uncertainty.
+      & Closest to the CSEDM error-triage question. It does not test whether another coding check improves the prediction. \\
+    \addlinespace
+    This dissertation
+      & Allocate 20 optional checks among 40 simulated cases, then update their predictions.
+      & Estimates channel reliability, bounds updates and tests altered evidence settings.
+      & Adds an auditable prediction-before-outcome evaluation, but its acquisition score is not expected classification-error reduction. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Nearest technical comparisons. The methods collect different evidence, make different decisions and measure different
+  outcomes. The table identifies prior components and the narrower evaluation performed in this dissertation. It does not imply
+  a direct benchmark comparison or a claim of superiority.}
+  \label{tab:nearest-work}
+\end{table}
+
+Together, these studies rule out a broad claim that combining tests, uncertainty and selection is new. They leave a narrower
+application question: how much should a programming prediction change after an extra check, and which checks help when their
+assumed reliability is wrong? The dissertation studies that question through committed predictions, bounded updates, fixed-budget
+selection and a separate check of uncertainty-based error triage on historical learner records.
+
+The narrow contribution is the evaluation of these specified rules and the analysis of where their assumptions fail.
+The review found no directly equivalent evaluation across these particular checks and fault settings, but this does not
+establish global priority or superiority over the methods reviewed. In particular, the implemented acquisition score differs
+from expected decision value, and its comparison cannot answer whether ordinary value-of-information selection would succeed.
+That distinction is developed mathematically in \cref{ch:method} and carried into the interpretation of the results.
