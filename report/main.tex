@@ -22,6 +22,7 @@
   minbibnames=6,
   doi=true
 ]{biblatex}
+% \usepackage[hidelinks]{hyperref}
 \usepackage[
     colorlinks=true,
     linkcolor=blue,
@@ -31,6 +32,14 @@
 \usepackage[nameinlink,noabbrev]{cleveref}
 
 \addbibresource{references.bib}
+\DeclareDelimFormat[bib,biblist]{finalnamedelim}{\addcomma\space}
+% The installed Vancouver style omits issue numbers and joins volume with article IDs.
+\renewbibmacro*{volume+number+eid}{%
+  \printfield{volume}%
+  \printfield[parens]{number}%
+  \setunit{\addcolon}%
+  \printfield{eid}%
+}
 \newcommand{\projecttitle}{When More Evidence Hurts: Evaluating Executable Evidence for Performance Prediction in AI Programming Tutors}
 \hypersetup{
   pdftitle={\projecttitle},
@@ -46,6 +55,8 @@
 \hypersetup{pageanchor=true}
 \pagenumbering{roman}
 \tableofcontents
+\listoffigures
+\listoftables
 
 \clearpage
 \pagenumbering{arabic}
