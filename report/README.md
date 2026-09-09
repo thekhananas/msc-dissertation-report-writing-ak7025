@@ -26,7 +26,7 @@ The research investigates the utility and reliability of **executable evidence**
 ### Clone the Repository
 ```bash
 # Clone the dissertation source repository
-git clone https://github.com/<username>/<repo-name>.git
+git clone https://github.com/thekhananas/msc-dissertation-source.git
 cd <repo-name>/report
 ```
 
