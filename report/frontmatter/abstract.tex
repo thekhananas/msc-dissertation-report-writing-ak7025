@@ -1,0 +1,30 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+A programming tutor needs evidence to judge whether someone can solve the next problem. Asking for a short piece of code
+and running it against tests offers one way to gather that evidence. Yet a test can miss a requirement, and its result can
+be scored or interpreted incorrectly. This dissertation asks when an additional coding check helps predict success on a
+separate task, and how unreliable checks affect that prediction.
+
+The project builds an evaluation pipeline that records predictions before collecting the task outcomes used to assess them.
+The first study uses answers and code from the language model \texttt{gpt-oss-120b} on 24 authored Python cases, with 23
+available for the final comparison. A fault in the project's test software marked matching outputs as incorrect, affecting
+both the evidence and the outcomes used to judge predictions. Repairing it reduced the apparent benefit of extra checks
+from about 30 to 4 percentage points. Correct predictions increased from 18 to 19 out of 23 after correction.
+The 95\% interval for the gain was 0 to 13 percentage points, leaving the size of any useful benefit uncertain.
+
+Two computer simulations then examine how to handle and select checks when their reliability varies. Limiting how far one
+check could change a probability estimate improved the accuracy of those estimates on average across the specified adverse conditions, although
+some conditions became worse. A second study allowed checks for half of 40 cases in each simulated round, with 2,000 rounds
+in each of seven settings. The proposed selection rule accounted for uncertainty about check reliability. It beat random
+selection but lost to simpler alternatives, including choosing the cases with the most uncertain predictions. Mathematical
+inspection found that its score could assign value to a check even when either result would leave the prediction unchanged.
+
+To examine uncertainty using student data, an exploratory study analysed Python activity records from the 2019 Computer
+Science Educational Data Mining data challenge. Among 729 predictions for 86 learners, selecting 361 uncertain predictions
+captured 72.3\% of prediction errors, compared with 49.5\% expected from random selection. Whether reviewing those errors
+would improve learning was not tested.
+
+The contribution is a reproducible evaluation tool and an investigation of how faulty checks and decision rules can distort
+performance predictions. The findings show why evidence quality needs its own evaluation before it informs tutoring decisions.
+Improved student learning remains a question for a subsequent teaching study.
