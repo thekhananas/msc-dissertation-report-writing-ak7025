@@ -1,8 +1,8 @@
 \chapter{Introduction}
 \label{ch:introduction}
 
-In this dissertation, an AI programming tutor means an interactive system that uses artificial intelligence to help a learner
-work through programming problems through questions, explanations or hints. This working definition draws on research on
+In this dissertation, an AI-assisted programming tutor means an interactive system that uses artificial intelligence to help a learner
+solve programming problems by asking questions, offering explanations or giving hints. This working definition draws on research on
 intelligent tutoring and conversational tutoring systems \parencite{vanlehn2011relative,nye2014autotutor}. The term describes
 the intended educational role. Evidence of effective teaching depends on how the system is evaluated.
 
@@ -14,12 +14,12 @@ Anthropic's Claude Learning mode similarly uses questions to guide reasoning \pa
 These examples establish the application context. The product descriptions do not establish independent learning gains or
 show that these products use the evidence-selection method investigated here.
 
-An adaptive programming tutor must decide whether to advance, ask another question, offer a hint, or request a short coding
+An adaptive AI-assisted programming tutor must decide whether to advance, ask another question, offer a hint, or request a short coding
 check. A fluent explanation can sound convincing while failing to show whether the person can solve a related task alone.
 Code offers another source of evidence, yet the task may be poorly chosen, the tests may miss part of the requirement, or the
 result may concern a different skill. An extra check can therefore improve a prediction or make it less reliable.
 
-This dissertation studies that decision in the setting of an AI programming tutor. It asks how a system should use extra coding
+This dissertation studies that decision in the setting of an AI-assisted programming tutor. It asks how a system should use extra coding
 evidence when predicting performance on a later task. The working tutoring interface illustrates a Socratic interaction.
 The experiments assess prediction and evidence use. Teaching effectiveness remains a question for a future student study.
 
@@ -71,7 +71,7 @@ the limits of the initial instrument. They do not establish actual financial sav
 The central question is:
 
 \begin{quote}
-When a programming tutor can request an extra coding check, when does that check give useful evidence about a later task, and
+When an AI-assisted programming tutor can request an extra coding check, when does that check give useful evidence about a later task, and
 when can it make the prediction less reliable?
 \end{quote}
 
@@ -80,19 +80,11 @@ acquisition experiment studies a narrower case: it gives exactly 20 of 40 simula
 for choosing those 20 cases. It does not decide whether to spend the allocation, adapt after each selection, or measure money
 or classroom time.
 
-The four study questions are stated below using the corrected method descriptions. The frozen plans retain their original
-wording and policy identifiers. The original RQ3 named ordinary value-of-information selection as a comparator. The implemented
-comparator instead scores changes in probability after limiting the effect of evidence. This score can favour a check even
-when its result would leave the predicted outcome unchanged. That part of the original question remains unanswered. RQ3 below describes
-the comparison actually performed. This wording was clarified after the experiment had been frozen.
-No predictions, outcomes, or implemented comparators were changed by the clarification.
-
-The study sequence also matters. The RQ1--RQ3 narrative was recorded on 4 September 2026, after the earlier benchmark and tracker
-work. Their original protocols retain their own dates. The student records come from the 2019 Computer Science Educational
-Data Mining (CSEDM) data challenge. The project's analysis specification for these records is dated 10 September 2026.
-Its configuration matches the recorded prediction run, but the available evidence has yet to establish when results were first
-inspected. The study is therefore reported as exploratory. The acquisition interpretation was corrected on 11 September.
-These dates describe how the investigation developed.
+The first question uses authored Python cases and responses from a fixed evaluation model. The next two use controlled
+simulations to examine what happens when coding checks have different levels of reliability. The final question uses
+historical learner records from the 2019 Computer Science Educational Data Mining data challenge
+\parencite{csedm2019challenge}. Those records show which predictions were wrong, but contain no results from optional
+coding checks.
 
 \begin{description}
   \item[RQ1: Extra coding evidence.] When every case receives an extra coding check, does that check improve the system's
@@ -106,29 +98,24 @@ These dates describe how the investigation developed.
   errors in predictions of first-attempt success than selecting the same number of predictions at random?
 \end{description}
 
-RQ4 asks whether uncertainty helps locate prediction errors in historical learner records. Those records contain the outcomes
-needed to assess error selection. Assessing the probe policy would also require outcomes from optional checks, which these
-records do not contain. The direct answers appear in \cref{ch:evaluation}. Their limits are examined in \cref{ch:discussion}.
+The direct answers appear in \cref{ch:evaluation}. Their limits are examined in \cref{ch:discussion}.
 
 % Keep the contribution table after the research questions and its introduction.
 \suppressfloats[t]
 \section{Contribution}
 
-The engineering contribution is a reproducible pipeline that separates visible evidence, fixed predictions, and withheld
-outcomes, with recorded execution and correction histories. The methodological work implements and tests bounded evidence
-updates and a reliability-aware fixed-budget selection rule. Bayesian updating and expected-loss decision theory are established
-methods. The contribution lies in implementing the specified rules and examining their behaviour under faulty evidence.
+This dissertation provides a reproducible way to evaluate whether an extra coding check improves performance prediction.
+The pipeline saves predictions before later-task outcomes are revealed, and preserves the prompts, code executions and scoring
+corrections needed to inspect the result. It also implements bounded Bayesian updates and a rule for allocating a fixed number
+of checks when their reliability is uncertain.
 
-The main selection result is negative. The proposed rule beat random choice, yet it made more errors on average across the
-six test environments than choosing the most uncertain cases or using a simpler estimate of check reliability. Requesting
-more checks also increased the average error. A mathematical review after the experiment found that the rule could favour
-a check even when either result would leave the predicted outcome unchanged. Its score therefore need not represent a
-reduction in prediction error. This limits what the comparison can establish about ordinary value-of-information selection.
+The studies show why this evaluation is needed. Correcting the execution harness changed the apparent benefit of extra checks.
+Bounded updates helped in some simulated conditions and harmed in others. The selection rule beat random choice, yet it made
+more errors on average than simpler alternatives. A mathematical review found that its score could favour a check even when
+neither result would change the prediction.
 
-Together, the studies examine how assessment defects, evidence assumptions, and decision rules affect measured performance.
-Their contribution is bounded by the chosen tasks and environments. They do not establish improved teaching, realistic student
-simulation, or an optimal evidence-acquisition policy. Table~\ref{tab:contributions} summarises what each part contributes
-and the limits of its evidence.
+Table~\ref{tab:contributions} summarises the engineering and methodological contributions, together with the limits of their
+evidence.
 
 \begin{table}[htbp]
   \centering
@@ -154,10 +141,9 @@ and the limits of its evidence.
   \end{tabularx}
 \end{table}
 
-The contribution is therefore an inspectable evaluation system and a set of bounded empirical and methodological findings.
-The tutoring demonstration makes that system's context tangible, but is not an additional effectiveness study. Any claim of
-novelty must be narrower than this inventory and supported by the direct comparisons with prior work in
-\cref{ch:related-work}.
+The related-work review positions these contributions alongside research on knowledge tracing, executable evidence and active
+assessment. The tutoring demonstration shows how the workflow could appear in a system. Its effectiveness with learners
+requires a future study.
 
 \section{Report Structure}
 
