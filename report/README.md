@@ -1,8 +1,11 @@
-# Dissertation Source and Artifact Repository
+# Dissertation Source
 
 **Imperial College London** — Department of Computing  
-**Degree**: MSc Computing  
+**Degree**: MSc Computing (Individual Project)  
 **Author**: Anas Khan (`ak7025@ic.ac.uk`)  
+**Supervisor**: Dr. Konstantinos Gkoutzis  
+**Second Marker**: Dr. Thomas Lancaster  
+**Academic Year**: 2025–2026  
 **Project Title**: *When More Evidence Hurts: Evaluating Executable Evidence for Performance Prediction in AI Programming Tutors*  
 **Submission Date**: September 2026  
 
@@ -21,103 +24,8 @@ The research investigates the utility and reliability of **executable evidence**
 
 ---
 
-## 2. Getting Started and Build Instructions
 
-### Clone the Repository
-```bash
-# Clone the dissertation source repository
-git clone https://github.com/thekhananas/msc-dissertation-source.git
-cd <repo-name>/report
-```
+## 2. Submission Compliance and Ethics
 
-### Prerequisites
-* **TeX Live 2023+** (or MacTeX) with `latexmk`, `pdflatex`, and `biber` on `PATH`.
-* Installed CTAN packages: `biblatex` (Vancouver style), `csquotes`, `microtype`, `hyperref`, `cleveref`, `booktabs`, `tabularx`, `placeins`.
-
-### Primary Build (Recommended)
-From within the `report/` directory:
-
-```bash
-cd report
-
-# Build complete PDF with automated multi-pass dependency resolution
-latexmk -pdf main.tex
-```
-
-`latexmk` automatically manages the compilation sequence:
-$$\text{pdflatex} \longrightarrow \text{biber} \longrightarrow \text{pdflatex} \longrightarrow \text{pdflatex}$$
-resolving all cross-references (`\cref`), bibliography citations, and table/figure lists.
-
-### Out-of-Source Build (Clean Working Tree)
-If you prefer building in an isolated subfolder, ensure the mirror subdirectories exist for `\include`:
-
-```bash
-cd report
-
-# 1. Pre-create mirror directories for chapter auxiliary files
-mkdir -p build/chapters build/appendices build/frontmatter
-
-# 2. Compile into build directory
-latexmk -pdf -outdir=build main.tex
-
-# Output PDF:
-open build/main.pdf
-```
-
-### Housekeeping / Clean Targets
-To remove intermediate LaTeX auxiliary files (`.aux`, `.bbl`, `.bcf`, `.log`, `.toc`, etc.) while retaining `main.pdf`:
-
-```bash
-cd report
-latexmk -c
-```
-
-To purge all generated files including the output PDF:
-
-```bash
-cd report
-latexmk -C
-```
-
----
-
-## 3. Repository Architecture
-
-```text
-report/
-├── main.tex                       # Master LaTeX report configuration and layout
-├── references.bib                 # Canonical 65-entry bibliography (Vancouver style)
-├── README.md                      # Academic submission documentation and build guide
-├── frontmatter/                   # Title, abstract (written last), and formal declaration
-│   ├── title.tex
-│   ├── abstract.tex
-│   └── declaration.tex
-├── chapters/                      # Eight core dissertation chapters
-│   ├── 01-introduction.tex
-│   ├── 02-related-work.tex
-│   ├── 03-measurement-design.tex
-│   ├── 04-system-design.tex
-│   ├── 05-evidence-tracking-and-acquisition.tex
-│   ├── 06-evaluation.tex
-│   ├── 07-discussion.tex
-│   └── 08-conclusion.tex
-├── appendices/                    # Reproducibility and claim boundary specifications
-│   ├── reproducibility.tex
-│   └── claim-boundaries.tex
-└── assets/                        # Standalone figures, tables, and asset register
-    ├── asset-register.md          # Cryptographic provenance register with SHA-256 hashes
-    ├── figures/                   # Vector PDF figures organised by chapter
-    │   ├── ch03-measurement/
-    │   ├── ch04-system/
-    │   └── ch06-evaluation/
-    └── tables/                    # Standalone LaTeX tables organised by chapter
-        └── ch06-evaluation/
-```
-
-
----
-
-## 4. Submission Compliance and Ethics
-
-* **Generative AI Assistance**: Disclosed in `frontmatter/declaration.tex` in compliance with Imperial College policy.
-* **Data Privacy**: No private student submissions or identifying telemetry are redistributed. The CSEDM dataset is evaluated strictly in aggregate under DataShop research agreements.
+* **Generative AI Assistance**: Disclosed in `report/frontmatter/declaration.tex` in compliance with Imperial College London policy.
+* **Data Privacy & Ethics**: No identifying student data is collected or distributed. The CSEDM dataset is processed and evaluated strictly in anonymised aggregate under DataShop research agreements.

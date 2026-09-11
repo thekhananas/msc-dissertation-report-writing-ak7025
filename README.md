@@ -1,4 +1,4 @@
-# When More Evidence Hurts: Evaluating Executable Evidence for Performance Prediction in AI Programming Tutors
+# Project Title: When More Evidence Hurts: Evaluating Executable Evidence for Performance Prediction in AI Programming Tutors
 
 **Imperial College London** — Department of Computing  
 **Degree**: MSc Computing (Individual Project)  
@@ -6,22 +6,20 @@
 **Supervisor**: Dr. Konstantinos Gkoutzis  
 **Second Marker**: Dr. Thomas Lancaster  
 **Academic Year**: 2025–2026  
-**Submission**: September 2026  
+**Submission Date**: September 2026  
 
 ---
 
-## 1. Executive Summary & Epistemic Scope
+## 1. Executive Summary and Epistemic Scope
 
-This repository houses the complete LaTeX source code, reproducible asset pipeline, verification registers, and evaluation artifacts for the MSc Computing individual project dissertation.
+This repository contains the complete LaTeX source, verified figure assets, tables, and bibliography for the MSc Computing dissertation.
 
-### Central Research Questions & Findings
-The research systematically investigates the utility and reliability of **executable evidence** (targeted test executions and code execution probes) when predicting subsequent programming performance in an AI tutoring environment:
+The research investigates the utility and reliability of **executable evidence** (targeted code execution checks / probes) when predicting subsequent programming performance in an AI tutoring environment. The central findings establish that:
+1. **Model Mismatch & Evidence Harm**: Under misspecified observational models, adding executable evidence can degrade prediction accuracy relative to dialogue-only tracking or simpler heuristic baselines.
+2. **Harness Defect Discovery**: Post-hoc verification revealed a sequence-comparison defect in the initial evaluation harness, altering 19 of 48 execution outcomes and adjusting the apparent empirical advantage to $1/23$ ($+4.35$ percentage points, 95% paired bootstrap interval $[0.00, 13.04]$).
+3. **Bounded Updating vs. Active Selection**: Bounded Bayesian updates provide robust protection against contaminated evidence, whereas active probe selection policies fail to reliably outperform random or greedy baselines under realistic uncertainty.
 
-1. **Model Mismatch & Evidence Harm**: Under misspecified observational models, incorporating executable evidence can degrade prediction accuracy compared to pure dialogue telemetry or simpler heuristic baselines.
-2. **Evaluation Harness Defect**: Post-hoc audits discovered a sequence-comparison defect in the initial evaluation harness, altering 19 of 48 execution outcomes and adjusting the apparent empirical advantage to $1/23$ ($+4.35$ percentage points, 95% paired bootstrap interval $[0.00, 13.04]$).
-3. **Bounded Updating vs. Active Selection**: Bounded Bayesian updates (Huber-loss contamination hedging) provide robust protection against contaminated evidence, whereas active probe selection policies fail to reliably outperform random or greedy baselines under realistic uncertainty.
-
-> **Epistemic Scope**: The empirical evaluations assess predictive instrument accuracy under fixed language models and historical benchmark data (CSEDM 2019). They evaluate telemetry and measurement mechanics; they do not assess live classroom interventions or claim human learning gains.
+> **Epistemic Scope & Boundary**: The empirical evaluations assess predictive instrument accuracy under fixed language models and historical data (CSEDM 2019). They do not evaluate classroom interventions or claim human learning gains.
 
 ---
 
@@ -96,20 +94,9 @@ latexmk -pdf -outdir=build main.tex
 # 3. View the generated document
 open build/main.pdf
 ```
-
-### Housekeeping Targets
-* Clean intermediate auxiliary files while keeping the compiled PDF:
-  ```bash
-  cd report && latexmk -c
-  ```
-* Purge all intermediate files and the compiled PDF:
-  ```bash
-  cd report && latexmk -C
-  ```
-
 ---
 
-## 4. Submission Compliance & Ethics
+## 4. Submission Compliance and Ethics
 
 * **Generative AI Assistance**: Disclosed in `report/frontmatter/declaration.tex` in compliance with Imperial College London policy.
 * **Data Privacy & Ethics**: No identifying student data is collected or distributed. The CSEDM dataset is processed and evaluated strictly in anonymised aggregate under DataShop research agreements.
