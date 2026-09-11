@@ -4,33 +4,36 @@
 \section{Report Build and Asset Identity}
 
 The report source includes its bibliography and selected figures and tables. With the required LaTeX tools installed, these
-files support a PDF build without rerunning an experiment or contacting a model provider. The assets are bundled with the
-separately retained report source. The experiment artefacts remain in the development workspace and are not needed for this build.
+files support a PDF build without rerunning an experiment or contacting a model provider. The source is available in the
+\href{https://github.com/thekhananas/msc-dissertation-report-writing-ak7025}{report-writing repository}. The implementation
+and public authored programming cases are available in the
+\href{https://github.com/thekhananas/msc-dissertation-ak7025}{experimentation repository}. The experiment artefacts are not
+needed for a report build.
 
 The asset register records each bundled file's purpose, hash and review status. The Python publication code creates candidate
 outputs in the development workspace. After review, the selected PDF or table is promoted into the relevant chapter asset
-folder and its register entry is updated. This records file identity. It does not establish scientific correctness,
+folder and its register entry is updated. This records the exact file selected for the report. It does not establish scientific correctness,
 redistribution permission or final visual approval.
 
-The acquisition exports with superseded labels remain outside the report. The results chapter contains only the tables and
+Earlier acquisition exports with outdated labels remain outside the report. The results chapter contains only the tables and
 figures selected for the current draft. The system-boundary, study-sequence and CSEDM entries now point to corrected exports
 generated from committed source revisions.
 
-Build the report from the \texttt{report/} directory:
+From the report-writing repository root, build the PDF with:
 
 \begin{verbatim}
+cd report
 latexmk -pdf main.tex
 \end{verbatim}
 
-This command invokes \texttt{latexmk} with PDF output, non-interactive error reporting and automated multi-pass
-dependency resolution across chapters, Biber, and vector graphics. The required tools are \texttt{latexmk}, Biber and
-the installed TeX packages. The report README records the compilation commands.
+The generated file is \texttt{report/main.pdf}. The public repository README also describes a build into a separate
+\texttt{build/} directory. Both routes require a TeX installation with \texttt{pdflatex}, \texttt{latexmk}, \texttt{biber}
+and the packages used by the report. \texttt{latexmk} runs the required LaTeX and bibliography passes.
 
-A retained report archive labelled \texttt{1639b14} was built separately on 11 September 2026 using the installed TeX tools.
-It produced 63 pages (49 content pages), and its recorded inputs contained no path into the working directory or experiment
-artefacts. The archive, PDF and build records were retained locally with their checksums. The current repository no longer
-resolves that identifier to a report tree, so this is recovery evidence for the retained archive rather than independently
-verifiable Git provenance. It does not cover the current report source or a fresh installation of the required tools.
+An archived review copy contains a PDF, build log and source archive. Its review record gives the PDF and source archive
+checksums. The current source was built
+separately in an isolated temporary directory using the installed TeX tools. This confirms the local build process for the
+current report source. It does not make the retained review copy a record of the current source.
 
 \section{Analysis Reproduction and Restricted Inputs}
 
@@ -39,29 +42,23 @@ allow offline inspection without purchasing another generation. Replaying record
 responses. It does not establish that a fresh provider request will produce identical text. Re-executing generated code also
 has different prerequisites from reading a saved sandbox result.
 
-The development source retained with that earlier checkpoint was also restored separately. Three existing API tests passed
-using the restored source and installed dependencies, covering both practice tasks and the recorded prediction-and-reveal flow.
-The offline development benchmark command completed with eight condition predictions, two criterion records and five
-Parquet datasets. Its outcomes are authored fixtures. These checks establish that the bundled development inputs support
-those workflows. Browser behaviour and installation into a fresh environment require further verification.
-
-The acquisition primary analysis was reproduced on 11 September 2026 in a separate local clone at revision
+The acquisition primary analysis was reproduced in a separate local clone at revision
 \texttt{5d6e76b}. Its historical environment was installed with \texttt{pixi install --locked}, using available package
 caches. The analysis read the retained 98,000 public records. All six generated files matched the original files byte for
 byte, including the report and comparison tables. No model or sandbox calls were made. This verifies the primary analysis
 from recorded observations. Regeneration of the simulation and installation on another machine remain unverified.
 
-The tracker simulation and analysis were also regenerated in a separate locked environment at surviving revision
+The tracker simulation and analysis were also regenerated in a separate locked environment at available revision
 \texttt{d14d8a2}. The trajectories matched the retained file byte for byte. Every reported metric, interval and decision
 agreed. The revision fields and dependent hashes differed. The original recorded revision, \texttt{baf40df}, could not be
 recovered from the current repository or its available rewrite map. This check establishes numerical reproduction from
 the named surviving implementation, while the link to the original source revision remains unresolved.
 
-The CSEDM pipeline requires authorised access to the local archive identified in its inventory configuration. Its official
-documentation describes the DataShop access route, prediction cut-off and supplied learner-separated folds
-\parencite[Accessing the Data, Evaluation and The Data]{csedm2019challenge}. Download access must not be treated as permission to
-redistribute learner records. The public package excludes raw events, learner identifiers and student source code. Rebuilding
-the analysis therefore requires inputs beyond a public checkout.
+The CSEDM pipeline requires the local archive identified in its inventory configuration. The CSEDM 2019 Data Challenge
+record describes the DataShop access route and prediction cut-off \parencite{csedm2019challenge}. The implementation
+configuration defines learner-separated folds.
+The public repository excludes raw events, learner identifiers and student source code. Rebuilding the analysis requires the
+archive in addition to a public checkout.
 
 From a clean committed development checkout, with the locked environment installed and the configured archive available,
 the companion pipeline is:
@@ -71,19 +68,18 @@ cd development
 pixi run python scripts/csedm_study_reproduce.py
 \end{verbatim}
 
-The command rebuilds inventory, features, predictions, analysis and publication, then reports the output locations. Its default
-output directory includes the code revision. A reproduction attempt that changes output content requires a separately named
-directory. Supplying an arbitrary revision string
-does not establish that the running code matches that revision.
+The command rebuilds inventory, features, predictions, analysis, figures and tables, then reports the output locations. Its
+default output directory includes the code revision. A reproduction attempt that changes output content requires a separately
+named directory. Supplying an arbitrary revision string does not establish that the running code matches that revision.
 
-Compare the resulting scientific quantities, sample counts and input hashes with the retained reference reports. A new code
+Compare the resulting reported metrics, sample counts and input hashes with the retained reference reports. A new code
 revision can change provenance fields and manifest hashes even when numerical results agree. Record those differences rather
 than promising that every new build reproduces an old manifest byte for byte.
 
 \section{Scope of the Verification}
 
-The recorded checks cover isolated PDF compilation, offline benchmark fixtures, and numerical replay of the retained acquisition
-and tracker analyses. They do not cover installation without the available package caches, installation on another machine, new provider
-generation, or redistribution of restricted learner records. A restore on the same machine supplies useful recovery evidence.
-The examiner package must also retain the final report archive and checksum, release revision, lockfile identity, reference
-reports, unresolved access requirements, and a verified off-device backup.
+The recorded checks cover isolated PDF compilation and numerical replay of the retained acquisition and tracker analyses.
+The report-writing repository contains the source and selected publication assets. The experimentation repository contains
+the implementation and public authored cases. Rebuilding the CSEDM analysis requires the local archive, and a fresh provider
+request can produce a different response from the recorded model output. Each retained analysis report identifies its code
+revision, lockfile and input hashes.
